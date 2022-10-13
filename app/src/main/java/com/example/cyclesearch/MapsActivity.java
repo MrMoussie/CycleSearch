@@ -23,11 +23,9 @@ import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
 
 import java.util.List;
 
@@ -38,8 +36,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private SensorManager sensorManager;
     private Sensor sensor;
     private MySensor mySensor;
-    private HSSFWorkbook wb;
-    private HSSFSheet sheet;
+    private XSSFWorkbook wb;
+    private XSSFSheet sheet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +76,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void init() {
         mySensor = new MySensor();
-        wb = new HSSFWorkbook();
+        wb = new XSSFWorkbook();
         sheet = wb.createSheet("Measurements");
         SensorEventListener sensorListener = new SensorActivity(mySensor, this, wb, sheet);
         sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 20000);

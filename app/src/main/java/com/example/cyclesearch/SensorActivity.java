@@ -4,10 +4,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,18 +17,18 @@ public class SensorActivity implements SensorEventListener {
     // Sensor stuff
     private ArrayList<Float> Acc;
     private ArrayList<Float> Gyro;
-    private MySensor sensor;
+    public MySensor sensor;
 
     // Excel stuff
     private MapsActivity main;
-    private Workbook wb;
-    private Sheet sheet;
+    private XSSFWorkbook wb;
+    private XSSFSheet sheet;
     private FileOutputStream out;
     private File file = new File("if you see this, the filepath was not set");
     private String activity = "if you see this, the activity is not set";
     private Excel excel;
 
-    public SensorActivity(MySensor sensor, MapsActivity map, HSSFWorkbook wb, HSSFSheet sheet) {
+    public SensorActivity(MySensor sensor, MapsActivity map, XSSFWorkbook wb, XSSFSheet sheet) {
         this.sensor = sensor;
         this.main = map;
         this.wb = wb;
@@ -87,11 +85,9 @@ public class SensorActivity implements SensorEventListener {
                 break;
         }
 
-        //TODO
-        // here data to excel sheet will have to be written.
-        // this currently will only provide data either from gyro or acc !!
-        // Currently it will not work !
-//        excel.writeData(this.sensor.getAcc(), this.sensor.getGyro(), this.sensor.getTimestamp(), activity);
+        if (this.sensor.checkReady()) {
+            excel.writeData(this.sensor.getAcc(), this.sensor.getGyro(), this.sensor.getTimestamp(), activity);
+        }
     }
 
     @Override

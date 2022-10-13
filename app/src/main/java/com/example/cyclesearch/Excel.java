@@ -1,8 +1,8 @@
 package com.example.cyclesearch;
 
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,15 +19,15 @@ public class Excel {
     private static final int TIMESTAMP = 6;
     private static final int ACTIVITY = 7;
 
-    private HSSFWorkbook wb;
-    private HSSFSheet sheet;
+    private XSSFWorkbook wb;
+    private XSSFSheet sheet;
     private int row;
     private File file;
     private FileOutputStream out;
 
     public Excel() {}
 
-    public Excel(FileOutputStream out, HSSFWorkbook wb, HSSFSheet sheet, File file) {
+    public Excel(FileOutputStream out, XSSFWorkbook wb, XSSFSheet sheet, File file) {
         this.out = out;
         this.wb = wb;
         this.sheet = sheet;
@@ -36,7 +36,7 @@ public class Excel {
     }
 
     public void writeData(ArrayList<Float> Acc, ArrayList<Float> Gyro, long timestamp, String activity) {
-        HSSFRow rowHead = sheet.createRow((short)(row-1));
+        XSSFRow rowHead = sheet.createRow((short)(row-1));
         rowHead.createCell(ACC_X).setCellValue(Acc.get(0));
         rowHead.createCell(ACC_Y).setCellValue(Acc.get(1));
         rowHead.createCell(ACC_Z).setCellValue(Acc.get(2));
@@ -56,14 +56,6 @@ public class Excel {
 
     public void resetRow() {
         row = 1;
-    }
-
-    public void finishSheet() {
-        try{
-            wb.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 }

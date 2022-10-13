@@ -10,13 +10,17 @@ public class MySensor {
     private ArrayList<Float> Gyro = new ArrayList<>();
     private long timestamp;
     private long lastTimestamp;
+    private boolean accReady = false;
+    private boolean gyroReady = false;
 
     public ArrayList<Float> getAcc() {
         return Acc;
     }
 
     public void setAcc(ArrayList<Float> acc) {
+
         Acc = acc;
+        accReady = true;
     }
 
     public ArrayList<Float> getGyro() {
@@ -25,6 +29,7 @@ public class MySensor {
 
     public void setGyro(ArrayList<Float> gyro) {
         Gyro = gyro;
+        gyroReady = true;
     }
 
     public long getTimestamp() {
@@ -41,6 +46,14 @@ public class MySensor {
         this.timestamp = timestamp;
     }
 
+    public boolean checkReady(){
+        if(accReady&&gyroReady){
+            accReady = false;
+            gyroReady = false;
+            return true;
+        }
+        return false;
+    }
 
 
     public MySensor() {}

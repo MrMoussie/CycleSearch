@@ -3,6 +3,7 @@ package com.example.cyclesearch;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
+import android.os.Environment;
 
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -24,7 +25,7 @@ public class SensorActivity implements SensorEventListener {
     private XSSFWorkbook wb;
     private XSSFSheet sheet;
     private FileOutputStream out;
-    private File file = new File("if you see this, the filepath was not set");
+    private File file = new File("/sdcard/Documents/testFile.xlsx");
     private String activity = "if you see this, the activity is not set";
     private Excel excel;
 

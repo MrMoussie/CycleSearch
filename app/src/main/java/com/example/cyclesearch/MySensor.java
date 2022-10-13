@@ -1,13 +1,14 @@
 package com.example.cyclesearch;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Object class for storing sensor values received from the sensors inside the mobile device
  */
 public class MySensor {
-    private ArrayList<Float> Acc = new ArrayList<>();
-    private ArrayList<Float> Gyro = new ArrayList<>();
+    private ArrayList<Float> Acc = new ArrayList<>(Arrays.asList(0.0f,0.0f,0.0f));
+    private ArrayList<Float> Gyro = new ArrayList<>(Arrays.asList(0.0f,0.0f,0.0f));
     private long timestamp;
     private long lastTimestamp;
     private boolean accReady = false;

@@ -5,12 +5,13 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.os.Environment;
 
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.opencsv.CSVWriter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 public class SensorActivity implements SensorEventListener {
@@ -22,25 +23,15 @@ public class SensorActivity implements SensorEventListener {
 
     // Excel stuff
     private MapsActivity main;
-    private XSSFWorkbook wb;
-    private XSSFSheet sheet;
-    private FileOutputStream out;
-    private File file = new File("/sdcard/Documents/testFile.xlsx");
+    private File file;
     private String activity = "if you see this, the activity is not set";
     private Excel excel;
 
-    public SensorActivity(MySensor sensor, MapsActivity map, XSSFWorkbook wb, XSSFSheet sheet) {
+    public SensorActivity(MySensor sensor, MapsActivity map, File file, FileWriter outputfile, CSVWriter writer) {
         this.sensor = sensor;
         this.main = map;
-        this.wb = wb;
-        this.sheet = sheet;
-
-        try {
-            this.out = new FileOutputStream(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        this.excel = new Excel(out, wb, sheet, file);
+        this.file = file;
+        excel = new Excel(this.file, outputfile, writer);
     }
 
     public SensorActivity() {}
@@ -54,13 +45,13 @@ public class SensorActivity implements SensorEventListener {
                 Acc = new ArrayList<>();
                 for (int i = 0; i < 3; i++) {
                     Acc.add(sensorEvent.values[i]);
-//                    if (i == 0) {
-//                        System.out.println("[Accelerometer value X]: " + sensorEvent.values[i]);
-//                    } else if (i == 1) {
-//                        System.out.println("[Accelerometer value Y]: " + sensorEvent.values[i]);
-//                    } else {
-//                        System.out.println("[Accelerometer value Z]: " + sensorEvent.values[i]);
-//                    }
+                    if (i == 0) {
+                        System.out.println("[Accelerometer value X]: " + sensorEvent.values[i]);
+                    } else if (i == 1) {
+                        System.out.println("[Accelerometer value Y]: " + sensorEvent.values[i]);
+                    } else {
+                        System.out.println("[Accelerometer value Z]: " + sensorEvent.values[i]);
+                    }
                 }
                 this.sensor.setAcc(Acc);
                 this.sensor.setTimestamp(sensorEvent.timestamp);
@@ -70,13 +61,13 @@ public class SensorActivity implements SensorEventListener {
                 Gyro = new ArrayList<>();
                 for (int i = 0; i < 3; i++) {
                     Gyro.add(sensorEvent.values[i]);
-//                    if (i == 0) {
-//                        System.out.println("[Accelerometer value X]: " + sensorEvent.values[i]);
-//                    } else if (i == 1) {
-//                        System.out.println("[Accelerometer value Y]: " + sensorEvent.values[i]);
-//                    } else {
-//                        System.out.println("[Accelerometer value Z]: " + sensorEvent.values[i]);
-//                    }
+                    if (i == 0) {
+                        System.out.println("[Accelerometer value X]: " + sensorEvent.values[i]);
+                    } else if (i == 1) {
+                        System.out.println("[Accelerometer value Y]: " + sensorEvent.values[i]);
+                    } else {
+                        System.out.println("[Accelerometer value Z]: " + sensorEvent.values[i]);
+                    }
                 }
                 this.sensor.setGyro(Gyro);
                 this.sensor.setTimestamp(sensorEvent.timestamp);

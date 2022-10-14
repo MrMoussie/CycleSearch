@@ -23,10 +23,12 @@ import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.ss.usermodel.*;
+import com.opencsv.CSVWriter;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -36,8 +38,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private SensorManager sensorManager;
     private Sensor sensor;
     private MySensor mySensor;
-    private XSSFWorkbook wb;
-    private XSSFSheet sheet;
+    private File file = new File("/sdcard/Documents/testFile.csv");
+    private FileWriter outputfile;
+    private CSVWriter writer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,10 +79,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     private void init() {
+        try {
+            // create FileWriter object with file as parameter
+            outputfile = new FileWriter(file);
+
+            // create CSVWriter object filewriter object as parameter
+            writer = new CSVWriter(outputfile);
+
+            // adding header to csv
+            String[] header = { "AccX", "AccY", "AccZ", "GyroX", "GyroY", "GyroZ", "Timestamp", "Activity" };
+            writer.writeNext(header);
+
+        }
+        catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         mySensor = new MySensor();
-        wb = new XSSFWorkbook();
-        sheet = wb.createSheet("Measurements");
-        SensorEventListener sensorListener = new SensorActivity(mySensor, this, wb, sheet);
+        SensorEventListener sensorListener = new SensorActivity(mySensor, this, file, outputfile, writer);
         sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 20000);
         sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), 20000);
     }

@@ -1,6 +1,7 @@
 package com.example.cyclesearch;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -20,6 +21,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.ViewFlipper;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -30,6 +33,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.cyclesearch.databinding.ActivityMainBinding;
+import com.google.android.material.appbar.AppBarLayout;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -57,6 +61,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private SupportMapFragment mapFragment;
     private Button button1;
     private Button button2;
+    private FrameLayout frame1;
+    private ConstraintLayout frame2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +72,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         button1 = (Button) findViewById(R.id.button2);
         button1.setOnClickListener(this);
+
+        frame2 = findViewById(R.id.ConstraintLayout);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
@@ -104,6 +112,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         permissionToken.continuePermissionRequest();
                     }
                 }).check();
+
+        init();
     }
 
 
@@ -152,20 +162,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onClick(View view) {
         switch(view.getId()) {
             case R.id.button2:
-                setContentView(R.layout.fragment_second);
                 FragmentManager fm = getSupportFragmentManager();
                 mapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapView);
+                frame2 = findViewById(R.id.ConstraintLayout);
                 if (mapFragment == null) {
                     mapFragment = SupportMapFragment.newInstance();
                     fm.beginTransaction().replace(R.id.mapView, mapFragment).commit();
                     mapFragment.getMapAsync(new MapsActivity());
                     button2 = (Button) findViewById(R.id.button_second);
                     button2.setOnClickListener(this);
+                } else {
+                    findViewById(R.id.include).setVisibility(View.GONE);
+                    frame2.setVisibility(View.VISIBLE);
                 }
                 break;
             case R.id.button_second:
-                setContentView(R.layout.activity_main);
-                System.out.println("This gotta be fixed");
+                button2 = (Button) findViewById(R.id.button_second);
+                button2.setOnClickListener(this);
+                findViewById(R.id.include).setVisibility(View.VISIBLE);
+                frame2.setVisibility(View.GONE);
                 break;
             default:
                 System.out.println("Entered default");

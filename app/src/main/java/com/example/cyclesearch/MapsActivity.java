@@ -46,6 +46,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
 
@@ -61,8 +62,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private SupportMapFragment mapFragment;
     private Button button1;
     private Button button2;
+    private Button button3;
+    private Button button4;
     private FrameLayout frame1;
     private ConstraintLayout frame2;
+    private SensorEventListener sensorListener;
+    private boolean initialized = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +77,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         button1 = (Button) findViewById(R.id.button2);
         button1.setOnClickListener(this);
+        button2 = (Button) findViewById(R.id.button_second);
+        button2.setOnClickListener(this);
+        button3 = (Button) findViewById(R.id.button_start);
+        button3.setOnClickListener(this);
+        button4 = (Button) findViewById(R.id.button_stop);
+        button4.setOnClickListener(this);
 
         frame2 = findViewById(R.id.ConstraintLayout);
 
@@ -112,13 +123,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         permissionToken.continuePermissionRequest();
                     }
                 }).check();
-
-        init();
     }
 
-
+    // Currently everytime the measurement is stopped, new file will be created
+    // on the start
     private void init() {
         try {
+            while (file.exists()) {
+                Random rand = new Random();
+                int val = rand.nextInt(10);
+                file = new File("/sdcard/Documents/testFile" + val + ".csv");
+            }
+
             // create FileWriter object with file as parameter
             outputfile = new FileWriter(file);
 
@@ -129,17 +145,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             String[] header = { "AccX", "AccY", "AccZ", "GyroX", "GyroY", "GyroZ", "Timestamp", "Activity" };
             writer.writeNext(header);
 
+            mySensor = new MySensor();
+            sensorListener = new SensorActivity(mySensor, this, file, outputfile, writer);
+            sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 20000);
+            sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),20000);
+            initialized = true;
+
         }
         catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
-        mySensor = new MySensor();
-        SensorEventListener sensorListener = new SensorActivity(mySensor, this, file, outputfile, writer);
-        sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 20000);
-        sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), 20000);
     }
+
+    private void sensorOFF() {
+        sensorManager.unregisterListener(sensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
+        sensorManager.unregisterListener(sensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE));
+    }
+
+
 
     /**
      * Manipulates the map once available.
@@ -169,8 +193,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mapFragment = SupportMapFragment.newInstance();
                     fm.beginTransaction().replace(R.id.mapView, mapFragment).commit();
                     mapFragment.getMapAsync(new MapsActivity());
-                    button2 = (Button) findViewById(R.id.button_second);
-                    button2.setOnClickListener(this);
                 } else {
                     findViewById(R.id.include).setVisibility(View.GONE);
                     frame2.setVisibility(View.VISIBLE);
@@ -182,8 +204,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 findViewById(R.id.include).setVisibility(View.VISIBLE);
                 frame2.setVisibility(View.GONE);
                 break;
+            case R.id.button_start:
+                init();
+                break;
+            case R.id.button_stop:
+                sensorOFF();
+                break;
             default:
                 System.out.println("Entered default");
+                System.exit(0);
                 break;
         }
     }

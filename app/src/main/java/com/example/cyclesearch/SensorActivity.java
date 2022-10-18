@@ -82,6 +82,14 @@ public class SensorActivity implements SensorEventListener {
         }
     }
 
+    public void setActivity(String activity) {
+        this.activity = activity;
+    }
+
+    public String getActivity() {
+        return this.activity;
+    }
+
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
 

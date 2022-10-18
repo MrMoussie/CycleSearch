@@ -14,14 +14,14 @@
 
     <include
         android:id="@+id/include"
-        android:visibility="visible"
+        android:visibility="gone"
         layout="@layout/content_main" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ConstraintLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"

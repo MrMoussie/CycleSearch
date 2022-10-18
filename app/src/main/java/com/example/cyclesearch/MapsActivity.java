@@ -20,8 +20,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ViewFlipper;
 
@@ -45,6 +47,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -67,7 +70,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private FrameLayout frame1;
     private ConstraintLayout frame2;
     private SensorEventListener sensorListener;
-    private boolean initialized = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,8 +127,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }).check();
     }
 
-    // Currently everytime the measurement is stopped, new file will be created
-    // on the start
     private void init() {
         try {
             while (file.exists()) {
@@ -149,11 +149,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             sensorListener = new SensorActivity(mySensor, this, file, outputfile, writer);
             sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 20000);
             sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),20000);
-            initialized = true;
 
         }
         catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -162,8 +160,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         sensorManager.unregisterListener(sensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
         sensorManager.unregisterListener(sensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE));
     }
-
-
 
     /**
      * Manipulates the map once available.

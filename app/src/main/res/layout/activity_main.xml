@@ -14,14 +14,14 @@
 
     <include
         android:id="@+id/include"
-        android:visibility="gone"
+        android:visibility="visible"
         layout="@layout/content_main" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ConstraintLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"
@@ -49,7 +49,7 @@
             app:layout_constraintHorizontal_bias="0.333"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.852" />
+            app:layout_constraintVertical_bias="1.0" />
 
         <Button
             android:id="@+id/button_second"
@@ -79,6 +79,69 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="251dp"
+            android:layout_height="190dp"
+            android:layout_marginStart="101dp"
+            android:layout_marginTop="388dp"
+            android:layout_marginEnd="102dp"
+            android:layout_marginBottom="197dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.519">
+
+            <RadioButton
+                android:id="@+id/bikingButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Biking"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.478"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView"
+                tools:ignore="MissingConstraints"
+
+                />
+
+            <RadioButton
+                android:id="@+id/walkingButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Walking"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bikingButton"
+                tools:ignore="MissingConstraints" />
+
+            <RadioButton
+                android:id="@+id/standingButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Standing"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/walkingButton"
+                tools:ignore="MissingConstraints" />
+
+            <RadioButton
+                android:id="@+id/sittingButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sitting"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.48"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/standingButton"
+                tools:ignore="MissingConstraints" />
+
+        </RadioGroup>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

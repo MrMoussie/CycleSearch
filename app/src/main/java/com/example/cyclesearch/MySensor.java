@@ -13,6 +13,7 @@ public class MySensor {
     private long lastTimestamp;
     private boolean accReady = false;
     private boolean gyroReady = false;
+    private String activity = "Init";
 
     public ArrayList<Float> getAcc() {
         return Acc;
@@ -31,6 +32,14 @@ public class MySensor {
     public void setGyro(ArrayList<Float> gyro) {
         Gyro = gyro;
         gyroReady = true;
+    }
+
+    public void setActivity(String activity) {
+        this.activity = activity;
+    }
+
+    public String getActivity() {
+        return this.activity;
     }
 
     public long getTimestamp() {

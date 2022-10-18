@@ -24,9 +24,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.ViewFlipper;
 
+import com.example.cyclesearch.databinding.ActivityMainBinding;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
@@ -34,7 +36,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.example.cyclesearch.databinding.ActivityMainBinding;
+//import com.example.cyclesearch.databinding.ActivityMainBinding;
 import com.google.android.material.appbar.AppBarLayout;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -89,6 +91,30 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         frame2 = findViewById(R.id.ConstraintLayout);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+        RadioGroup radioGroup =((RadioGroup) findViewById(R.id.radioGroup));
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(checkedId == R.id.bikingButton && mySensor != null){
+                    System.out.println("You are now biking");
+                    mySensor.setActivity("Biking");
+                }
+                else if(checkedId == R.id.walkingButton && mySensor != null){
+                    System.out.println("You are now walking");
+                    mySensor.setActivity("Walking");
+                }
+                else if(checkedId == R.id.standingButton && mySensor != null){
+                    System.out.println("You are standing");
+                    mySensor.setActivity("Standing");
+                }
+                else if(checkedId == R.id.sittingButton && mySensor != null){
+                    System.out.println("You are now sitting");
+                    mySensor.setActivity("Sitting");
+                }
+
+            }
+        });
 
         Dexter.withContext(getApplicationContext())
                 .withPermissions(

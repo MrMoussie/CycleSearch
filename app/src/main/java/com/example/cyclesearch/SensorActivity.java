@@ -20,6 +20,7 @@ public class SensorActivity implements SensorEventListener {
     private ArrayList<Float> Acc;
     private ArrayList<Float> Gyro;
     public MySensor sensor;
+    public MySensor Mysensor;
 
     // Excel stuff
     private MapsActivity main;
@@ -29,6 +30,7 @@ public class SensorActivity implements SensorEventListener {
 
     public SensorActivity(MySensor sensor, MapsActivity map, File file, FileWriter outputfile, CSVWriter writer) {
         this.sensor = sensor;
+        Mysensor = sensor;
         this.main = map;
         this.file = file;
         excel = new Excel(this.file, outputfile, writer);
@@ -78,16 +80,8 @@ public class SensorActivity implements SensorEventListener {
         }
 
         if (this.sensor.checkReady()) {
-            excel.writeData(this.sensor.getAcc(), this.sensor.getGyro(), this.sensor.getTimestamp(), activity);
+            excel.writeData(this.sensor.getAcc(), this.sensor.getGyro(), this.sensor.getTimestamp(), Mysensor.getActivity());
         }
-    }
-
-    public void setActivity(String activity) {
-        this.activity = activity;
-    }
-
-    public String getActivity() {
-        return this.activity;
     }
 
     @Override

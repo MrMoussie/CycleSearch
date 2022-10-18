@@ -20,24 +20,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ListView;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
-import android.widget.ViewFlipper;
 
-import com.example.cyclesearch.databinding.ActivityMainBinding;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-//import com.example.cyclesearch.databinding.ActivityMainBinding;
-import com.google.android.material.appbar.AppBarLayout;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -46,17 +38,13 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.opencsv.CSVWriter;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
 
     private GoogleMap mMap;
-    private ActivityMainBinding binding;
     private AppBarConfiguration appBarConfiguration;
     private SensorManager sensorManager;
     private Sensor sensor;
@@ -69,9 +57,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button button2;
     private Button button3;
     private Button button4;
+    private Button button5;
     private FrameLayout frame1;
     private ConstraintLayout frame2;
     private SensorEventListener sensorListener;
+    private int val;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +77,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         button3.setOnClickListener(this);
         button4 = (Button) findViewById(R.id.button_stop);
         button4.setOnClickListener(this);
+        button5 = (Button) findViewById(R.id.button_reset);
+        button5.setOnClickListener(this);
 
         frame2 = findViewById(R.id.ConstraintLayout);
 
@@ -155,11 +147,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void init() {
         try {
-            while (file.exists()) {
-                Random rand = new Random();
-                int val = rand.nextInt(10);
-                file = new File("/sdcard/Documents/testFile" + val + ".csv");
-            }
+//            while (file.exists()) {
+//                file = new File("/sdcard/Documents/testFile" + val++ + ".csv");
+//            }
 
             // create FileWriter object with file as parameter
             outputfile = new FileWriter(file);
@@ -227,9 +217,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 frame2.setVisibility(View.GONE);
                 break;
             case R.id.button_start:
+                System.out.println("Sensors ON");
                 init();
                 break;
+            case R.id.button_reset:
+                if (file == null) {
+                    System.out.println("Nothing to delete");
+                    break;
+                }
+                System.out.println("System RESET");
+                file.delete();
+                sensorOFF();
+                break;
             case R.id.button_stop:
+                System.out.println("Sensors OFF");
                 sensorOFF();
                 break;
             default:

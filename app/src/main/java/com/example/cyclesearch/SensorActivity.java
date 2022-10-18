@@ -22,6 +22,10 @@ public class SensorActivity implements SensorEventListener {
     public MySensor sensor;
     public MySensor Mysensor;
 
+    int accCounter = 0;
+    int gyroCounter = 0;
+    int counterThreshold = 70;
+
     // Excel stuff
     private MapsActivity main;
     private File file;
@@ -55,8 +59,12 @@ public class SensorActivity implements SensorEventListener {
                         System.out.println("[Accelerometer value Z]: " + sensorEvent.values[i]);
                     }
                 }
-                this.sensor.setAcc(Acc);
-                this.sensor.setTimestamp(sensorEvent.timestamp);
+
+                accCounter++;
+                if (accCounter > counterThreshold) {
+                    this.sensor.setAcc(Acc);
+                    this.sensor.setTimestamp(sensorEvent.timestamp);
+                }
                 break;
 
             case Sensor.TYPE_GYROSCOPE:
@@ -71,8 +79,11 @@ public class SensorActivity implements SensorEventListener {
                         System.out.println("[Accelerometer value Z]: " + sensorEvent.values[i]);
                     }
                 }
-                this.sensor.setGyro(Gyro);
-                this.sensor.setTimestamp(sensorEvent.timestamp);
+                gyroCounter++;
+                if (gyroCounter > counterThreshold) {
+                    this.sensor.setGyro(Gyro);
+                    this.sensor.setTimestamp(sensorEvent.timestamp);
+                }
                 break;
             default:
                 System.out.println("Invalid sensor type in class SensorActivity, method onSensorChanged");

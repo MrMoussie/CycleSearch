@@ -27,8 +27,8 @@
         android:id="@+id/ConstraintLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/background_blue"
-        android:visibility="gone">
+        android:background="@color/white"
+        android:visibility="visible">
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"
@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="254dp"
             android:layout_marginTop="298dp"
-            android:layout_marginEnd="69dp"
+            android:layout_marginEnd="40dp"
             android:layout_marginBottom="385dp"
             android:text="@string/reset"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -107,12 +107,13 @@
 
         <RadioGroup
             android:id="@+id/radioGroup"
-            android:layout_width="251dp"
-            android:layout_height="190dp"
+            android:layout_width="162dp"
+            android:layout_height="189dp"
             android:layout_marginStart="101dp"
             android:layout_marginTop="388dp"
             android:layout_marginEnd="102dp"
             android:layout_marginBottom="197dp"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

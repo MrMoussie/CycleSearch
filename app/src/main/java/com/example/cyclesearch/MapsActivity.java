@@ -2,6 +2,7 @@ package com.example.cyclesearch;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -9,8 +10,10 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
@@ -69,6 +72,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private int val;
     private boolean init = false;
     private Excel excel;
+
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,20 +139,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             System.out.println("[SYSTEM] PERMISSION GRANTED!");
                             init();
 
+                            //TODO
+                            // Gotta fix the permissions for writing and reading and opening and creating the file
+                            // How, i don't know
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     // on below line we are
                                     // creating a new intent
-//                                    Intent i = new Intent(MapsActivity.this, Main.class);
-//
-//                                    // on below line we are
-//                                    // starting a new activity.
-//                                    startActivity(i);
-//
-//                                    // on the below line we are finishing
-//                                    // our current activity.
-//                                    finish();
+                                    Intent i = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                                    i.addCategory(Intent.CATEGORY_OPENABLE);
+                                    i.setType("application/csv");
+                                    i.putExtra(Intent.EXTRA_TITLE, "measurements.csv");
+                                    // on below line we are
+                                    // starting a new activity.
+                                    startActivity(i);
+
+                                    // on the below line we are finishing
+                                    // our current activity.
+                                    finish();
                                 }
                             }, 3000);
                         }
@@ -158,7 +172,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void init() {
         try {
-
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             // create FileWriter object with file as parameter
             outputfile = new FileWriter(file);
 
@@ -179,6 +197,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
         }
     }
 

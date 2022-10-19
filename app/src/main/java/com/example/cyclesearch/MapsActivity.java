@@ -40,6 +40,8 @@ import com.opencsv.CSVWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
@@ -58,11 +60,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button button3;
     private Button button4;
     private Button button5;
+    private Button button6;
     private FrameLayout frame1;
     private ConstraintLayout frame2;
     private SensorEventListener sensorListener;
     private SensorActivity sensorActivity;
     private int val;
+    private boolean init = false;
+    private Excel excel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +85,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         button4.setOnClickListener(this);
         button5 = (Button) findViewById(R.id.button_reset);
         button5.setOnClickListener(this);
+        button6 = (Button) findViewById(R.id.button3);
+        button6.setOnClickListener(this);
 
         frame2 = findViewById(R.id.ConstraintLayout);
 
@@ -148,8 +155,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void init() {
         try {
-//            while (file.exists()) {
+//            if (file.exists()) {
 //                file = new File("/sdcard/Documents/testFile" + val++ + ".csv");
+//            } else {
+//                file = new File("/sdcard/Documents/testFile.csv");
 //            }
 
             // create FileWriter object with file as parameter
@@ -165,12 +174,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mySensor = new MySensor();
             sensorListener = new SensorActivity(mySensor, this, file, outputfile, writer);
             sensorActivity = (SensorActivity) sensorListener;
+            excel = sensorActivity.getExcel();
             sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 20000);
             sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),20000);
+            init = true;
         }
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void sensorON() {
+        sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 20000);
+        sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),20000);
     }
 
     private void sensorOFF() {
@@ -178,7 +194,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         sensorManager.unregisterListener(sensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE));
         sensorActivity.resetAccCounter();
         sensorActivity.resetGyroCounter();
-
     }
 
     /**
@@ -221,8 +236,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 frame2.setVisibility(View.GONE);
                 break;
             case R.id.button_start:
-                System.out.println("Sensors ON");
-                init();
+                if (init == false) {
+                    System.out.println("Sensors ON and system initialized");
+                    init();
+                } else {
+                    System.out.println("Sensors ON");
+                    sensorON();
+                }
                 break;
             case R.id.button_reset:
                 if (file == null) {
@@ -236,6 +256,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.button_stop:
                 System.out.println("Sensors OFF");
                 sensorOFF();
+                excel.writeData(new ArrayList<>(Arrays.asList(0.0f,0.0f,0.0f)), new ArrayList<>(Arrays.asList(0.0f,0.0f,0.0f)), 0, "init");
+                break;
+            case R.id.button3:
+                System.out.println("System GO BACK");
                 break;
             default:
                 System.out.println("Entered default");

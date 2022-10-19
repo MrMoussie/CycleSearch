@@ -24,7 +24,7 @@ public class SensorActivity implements SensorEventListener {
 
     int accCounter = 0;
     int gyroCounter = 0;
-    int counterThreshold = 70;
+    int counterThreshold = 10;
 
     // Excel stuff
     private MapsActivity main;
@@ -93,6 +93,10 @@ public class SensorActivity implements SensorEventListener {
         if (this.sensor.checkReady()) {
             excel.writeData(this.sensor.getAcc(), this.sensor.getGyro(), this.sensor.getTimestamp(), Mysensor.getActivity());
         }
+    }
+
+    public Excel getExcel() {
+        return this.excel;
     }
 
     public void resetGyroCounter() {

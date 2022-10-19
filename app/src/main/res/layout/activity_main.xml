@@ -17,6 +17,12 @@
         android:visibility="visible"
         layout="@layout/content_main" />
 
+    <include
+        android:id="@+id/include"
+        android:visibility="gone"
+        layout="@layout/fragment_weka" />
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ConstraintLayout"
         android:layout_width="wrap_content"

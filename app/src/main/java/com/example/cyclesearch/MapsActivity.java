@@ -225,14 +225,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     fm.beginTransaction().replace(R.id.mapView, mapFragment).commit();
                     mapFragment.getMapAsync(new MapsActivity());
                 } else {
-                    findViewById(R.id.include).setVisibility(View.GONE);
+                    findViewById(R.id.includeMain).setVisibility(View.GONE);
                     frame2.setVisibility(View.VISIBLE);
                 }
                 break;
             case R.id.button_second:
                 button2 = (Button) findViewById(R.id.button_second);
                 button2.setOnClickListener(this);
-                findViewById(R.id.include).setVisibility(View.VISIBLE);
+                findViewById(R.id.includeMain).setVisibility(View.VISIBLE);
                 frame2.setVisibility(View.GONE);
                 break;
             case R.id.button_start:

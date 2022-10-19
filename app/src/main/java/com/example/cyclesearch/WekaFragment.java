@@ -36,7 +36,7 @@ public class WekaFragment extends Fragment {
 
 
         //Go back button
-        binding.button3.setOnClickListener
+        binding.buttonBack.setOnClickListener
                 (v -> NavHostFragment.findNavController(WekaFragment.this)
                 .navigate(R.id.walkingButton));
 
@@ -53,7 +53,7 @@ public class WekaFragment extends Fragment {
                 (v -> System.out.println(TAG + "The measurement ended"));
 
      //Radio group
-        RadioGroup radioGroup =((RadioGroup) view.findViewById(R.id.radioGroup));
+        RadioGroup radioGroup =((RadioGroup) view.findViewById(R.id.radioWeka));
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {

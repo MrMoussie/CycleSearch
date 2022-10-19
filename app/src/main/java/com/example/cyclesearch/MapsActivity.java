@@ -61,6 +61,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button button4;
     private Button button5;
     private Button button6;
+    private Button button7;
     private FrameLayout frame1;
     private ConstraintLayout frame2;
     private SensorEventListener sensorListener;
@@ -87,6 +88,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         button5.setOnClickListener(this);
         button6 = (Button) findViewById(R.id.activityButton);
         button6.setOnClickListener(this);
+        button7 = (Button) findViewById(R.id.buttonBack);
+        button7.setOnClickListener(this);
 
         frame2 = findViewById(R.id.ConstraintLayout);
 
@@ -262,6 +265,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 System.out.println("System GO BACK");
                 findViewById(R.id.includeWeka).setVisibility(View.VISIBLE);
                 frame2.setVisibility(View.GONE);
+                findViewById(R.id.includeMain).setVisibility(View.GONE);
+                break;
+            case R.id.buttonBack:
+                System.out.println("System GO BACK");
+                findViewById(R.id.includeWeka).setVisibility(View.GONE);
+                frame2.setVisibility(View.GONE);
+                findViewById(R.id.includeMain).setVisibility(View.VISIBLE);
                 break;
             default:
                 System.out.println("Entered default");

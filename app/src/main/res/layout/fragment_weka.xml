@@ -25,7 +25,7 @@
         tools:ignore="MissingConstraints" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/buttonBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -54,11 +54,11 @@
         android:text="Reset"
         app:layout_constraintEnd_toStartOf="@+id/textView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button3"
+        app:layout_constraintTop_toBottomOf="@+id/buttonBack"
         tools:ignore="MissingConstraints" />
 
     <RadioGroup
-        android:id="@+id/radioGroup"
+        android:id="@+id/radioWeka"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -137,7 +137,7 @@
         android:layout_marginBottom="250dp"
         android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/imageView3"
-        app:layout_constraintTop_toTopOf="@+id/radioGroup"
+        app:layout_constraintTop_toTopOf="@+id/radioWeka"
         tools:ignore="MissingConstraints" />
 
     <Button

@@ -85,7 +85,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         button4.setOnClickListener(this);
         button5 = (Button) findViewById(R.id.button_reset);
         button5.setOnClickListener(this);
-        button6 = (Button) findViewById(R.id.button3);
+        button6 = (Button) findViewById(R.id.activityButton);
         button6.setOnClickListener(this);
 
         frame2 = findViewById(R.id.ConstraintLayout);
@@ -258,8 +258,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 sensorOFF();
                 excel.writeData(new ArrayList<>(Arrays.asList(0.0f,0.0f,0.0f)), new ArrayList<>(Arrays.asList(0.0f,0.0f,0.0f)), 0, "init");
                 break;
-            case R.id.button3:
+            case R.id.activityButton:
                 System.out.println("System GO BACK");
+                findViewById(R.id.includeWeka).setVisibility(View.VISIBLE);
+                frame2.setVisibility(View.GONE);
                 break;
             default:
                 System.out.println("Entered default");

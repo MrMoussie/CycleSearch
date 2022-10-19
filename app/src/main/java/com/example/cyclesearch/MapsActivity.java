@@ -61,6 +61,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private FrameLayout frame1;
     private ConstraintLayout frame2;
     private SensorEventListener sensorListener;
+    private SensorActivity sensorActivity;
     private int val;
 
     @Override
@@ -163,9 +164,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             mySensor = new MySensor();
             sensorListener = new SensorActivity(mySensor, this, file, outputfile, writer);
+            sensorActivity = (SensorActivity) sensorListener;
             sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 20000);
             sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),20000);
-
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -175,6 +176,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void sensorOFF() {
         sensorManager.unregisterListener(sensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
         sensorManager.unregisterListener(sensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE));
+        sensorActivity.resetAccCounter();
+        sensorActivity.resetGyroCounter();
+
     }
 
     /**

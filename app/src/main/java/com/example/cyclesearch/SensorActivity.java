@@ -95,6 +95,14 @@ public class SensorActivity implements SensorEventListener {
         }
     }
 
+    public void resetGyroCounter() {
+        this.gyroCounter = 0;
+    }
+
+    public void resetAccCounter() {
+        this.accCounter = 0;
+    }
+
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
 

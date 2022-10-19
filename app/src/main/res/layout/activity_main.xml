@@ -28,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"
@@ -38,10 +38,10 @@
             android:contentDescription="@string/app_name"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"></com.google.android.gms.maps.MapView>
+            app:layout_constraintVertical_bias="0.666"></com.google.android.gms.maps.MapView>
 
         <Button
             android:id="@+id/button_start"
@@ -109,8 +109,8 @@
 
         <RadioGroup
             android:id="@+id/radioGroup"
-            android:layout_width="218dp"
-            android:layout_height="220dp"
+            android:layout_width="206dp"
+            android:layout_height="194dp"
             android:layout_marginStart="101dp"
             android:layout_marginTop="388dp"
             android:layout_marginEnd="102dp"

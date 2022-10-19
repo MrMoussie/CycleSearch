@@ -51,7 +51,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private SensorManager sensorManager;
     private Sensor sensor;
     private MySensor mySensor;
-    private File file = new File("/sdcard/Documents/testFile.csv");
+    private File file = new File("/sdcard/Documents/test.csv");
     private FileWriter outputfile;
     private CSVWriter writer;
     private SupportMapFragment mapFragment;
@@ -158,11 +158,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void init() {
         try {
-//            if (file.exists()) {
-//                file = new File("/sdcard/Documents/testFile" + val++ + ".csv");
-//            } else {
-//                file = new File("/sdcard/Documents/testFile.csv");
-//            }
 
             // create FileWriter object with file as parameter
             outputfile = new FileWriter(file);
@@ -178,8 +173,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             sensorListener = new SensorActivity(mySensor, this, file, outputfile, writer);
             sensorActivity = (SensorActivity) sensorListener;
             excel = sensorActivity.getExcel();
-            sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 20000);
-            sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),20000);
+            sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 200000);
+            sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),200000);
             init = true;
         }
         catch (IOException e) {
@@ -188,8 +183,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void sensorON() {
-        sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 20000);
-        sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),20000);
+        sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 200000);
+        sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),200000);
     }
 
     private void sensorOFF() {

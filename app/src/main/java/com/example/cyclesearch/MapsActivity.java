@@ -20,8 +20,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -218,6 +222,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onClick(View view) {
+        ImageView turtle = null;
         switch(view.getId()) {
             case R.id.button2:
                 FragmentManager fm = getSupportFragmentManager();
@@ -242,6 +247,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (init == false) {
                     System.out.println("Sensors ON and system initialized");
                     init();
+                    turtle = (ImageView) findViewById(R.id.turtleWantsToSpin);
+                    turtle.animate().scaleX(.5f);
+                    turtle.animate().scaleY(.5f);
+                   // turtle.animate().rotation(360f);
+                    System.out.println("Should be rotating");
                 } else {
                     System.out.println("Sensors ON");
                     sensorON();
@@ -252,14 +262,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     System.out.println("Nothing to delete");
                     break;
                 }
+                //Animation for reset
+
+
+                turtle = (ImageView) findViewById(R.id.turtleWantsToSpin);
+                //Animation for reset
+                turtle.animate().rotationXBy(360f);
                 System.out.println("System RESET");
-                file.delete();
-                sensorOFF();
+             //  file.delete();
+              //  sensorOFF();
                 break;
             case R.id.button_stop:
+                turtle = (ImageView) findViewById(R.id.turtleWantsToSpin);
+                turtle.animate().scaleX(1f);
+                turtle.animate().scaleY(1f);
+                turtle.animate().rotationXBy(360f);
+
                 System.out.println("Sensors OFF");
-                sensorOFF();
-                excel.writeData(new ArrayList<>(Arrays.asList(0.0f,0.0f,0.0f)), new ArrayList<>(Arrays.asList(0.0f,0.0f,0.0f)), 0, "init");
+                //sensorOFF();
+                //excel.writeData(new ArrayList<>(Arrays.asList(0.0f,0.0f,0.0f)), new ArrayList<>(Arrays.asList(0.0f,0.0f,0.0f)), 0, "init");
+
                 break;
             case R.id.activityButton:
                 System.out.println("System GO BACK");

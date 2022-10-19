@@ -109,8 +109,8 @@
 
         <RadioGroup
             android:id="@+id/radioGroup"
-            android:layout_width="218dp"
-            android:layout_height="220dp"
+            android:layout_width="207dp"
+            android:layout_height="202dp"
             android:layout_marginStart="101dp"
             android:layout_marginTop="388dp"
             android:layout_marginEnd="102dp"
@@ -170,6 +170,17 @@
                 tools:ignore="MissingConstraints" />
 
         </RadioGroup>
+
+        <ImageView
+            android:id="@+id/turtleWantsToSpin"
+            android:layout_width="82dp"
+            android:layout_height="71dp"
+            app:layout_constraintBottom_toTopOf="@+id/radioGroup"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mapView"
+            app:srcCompat="@drawable/turtle" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

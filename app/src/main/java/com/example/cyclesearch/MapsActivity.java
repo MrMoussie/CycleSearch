@@ -272,6 +272,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     break;
                 }
                 //Animation for reset
+                // Used for the purpose of resetting the animation
 
                 turtle = (ImageView) findViewById(R.id.turtleWantsToSpin);
                 //Animation for reset

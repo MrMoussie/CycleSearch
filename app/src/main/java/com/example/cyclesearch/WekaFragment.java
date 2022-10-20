@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
@@ -20,11 +18,9 @@ public class WekaFragment extends Fragment {
     private FragmentWekaBinding binding;
     private final String TAG = "[SYSTEM]: ";
 
-
-
     @Override
     public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
+            @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
 
@@ -56,24 +52,21 @@ public class WekaFragment extends Fragment {
                 (v -> System.out.println(TAG + "The measurement ended"));
 
      //Radio group
-        RadioGroup radioGroup =((RadioGroup) view.findViewById(R.id.radioWeka));
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if(checkedId == R.id.bikingButton){
-                    System.out.println("You are now biking");
-                }
-                else if(checkedId == R.id.walkingButton){
-                    System.out.println("You are now walking");
-                }
-                else if(checkedId == R.id.standingButton){
-                    System.out.println("You are standing");
-                }
-                else if(checkedId == R.id.sittingButton){
-                    System.out.println("You are now sitting");
-                }
-
+        RadioGroup radioGroup =(view.findViewById(R.id.radioWeka));
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if(checkedId == R.id.bikingButton){
+                System.out.println("You are now biking");
             }
+            else if(checkedId == R.id.walkingButton){
+                System.out.println("You are now walking");
+            }
+            else if(checkedId == R.id.standingButton){
+                System.out.println("You are standing");
+            }
+            else if(checkedId == R.id.sittingButton){
+                System.out.println("You are now sitting");
+            }
+
         });
 
 
@@ -83,34 +76,6 @@ public class WekaFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    public void onRadioButtonClick(View view) {
-
-        boolean checked = ((RadioButton) view).isChecked();
-
-        switch (view.getId()) {
-            case R.id.bikingButton:
-                if(checked)
-                    //Biking
-                    System.out.println(TAG + "The biking button was selected");
-                    break;
-
-            case R.id.walkingButton:
-                if(checked)
-                    //Biking
-                    break;
-
-            case R.id.standingButton:
-                if(checked)
-                    //Biking
-                    break;
-
-            case R.id.sittingButton:
-                if(checked)
-                    //Biking
-                    break;
-        }
     }
 
 

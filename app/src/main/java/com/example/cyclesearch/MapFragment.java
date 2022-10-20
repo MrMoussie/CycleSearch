@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.cyclesearch.databinding.FragmentSecondBinding;
 
@@ -18,7 +17,7 @@ public class MapFragment extends Fragment {
 
     @Override
     public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
+            @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
 
@@ -26,20 +25,11 @@ public class MapFragment extends Fragment {
         return binding.getRoot();
 
     }
-    //TODO Map in the background
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //TODO Implement view thingy
-        binding.buttonSecond.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //NavHostFragment.findNavController(Second2Fragment.this)
-                  //      .navigate(R.id.action_Second2Fragment_to_First2Fragment);
-            }
-
-            //TODO Button color
+        binding.buttonSecond.setOnClickListener(view1 -> {
         });
     }
 

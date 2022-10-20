@@ -10,7 +10,6 @@ public class MySensor {
     private ArrayList<Float> Acc = new ArrayList<>(Arrays.asList(0.0f,0.0f,0.0f));
     private ArrayList<Float> Gyro = new ArrayList<>(Arrays.asList(0.0f,0.0f,0.0f));
     private long timestamp;
-    private long lastTimestamp;
     private boolean accReady = false;
     private boolean gyroReady = false;
     private String activity = "Init";
@@ -50,12 +49,10 @@ public class MySensor {
         this.timestamp = timestamp;
     }
 
-    public MySensor(ArrayList<Float> A, ArrayList<Float> L, ArrayList<Float> G, long timestamp) {
-        this.Acc = A;
-        this.Gyro = G;
-        this.timestamp = timestamp;
-    }
-
+    /**
+     * Method that checks whether both Accelerometer and Gyrometer have acquired data to be sent to CSV file
+     * @return boolean that determines whether both Gyro and Acc have data to send
+     */
     public boolean checkReady(){
         if(accReady&&gyroReady){
             accReady = false;

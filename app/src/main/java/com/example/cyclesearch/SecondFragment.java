@@ -19,7 +19,7 @@ public class SecondFragment extends Fragment {
 
     @Override
     public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
+            @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
 
@@ -27,21 +27,12 @@ public class SecondFragment extends Fragment {
         return binding.getRoot();
 
     }
-    //TODO Map in the background
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //TODO Implement view thingy
-        binding.buttonSecond.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(SecondFragment.this)
-                        .navigate(R.id.action_secondFragment2_to_firstFragment);
-            }
-
-            //TODO Button color
-        });
+        binding.buttonSecond.setOnClickListener(view1 -> NavHostFragment.findNavController(SecondFragment.this)
+                .navigate(R.id.action_secondFragment2_to_firstFragment));
     }
 
     @Override

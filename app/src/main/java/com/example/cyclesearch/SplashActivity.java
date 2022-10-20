@@ -1,26 +1,22 @@
 package com.example.cyclesearch;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Handler;
-import android.view.View;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.cyclesearch.databinding.ActivitySplashBinding;
-
+@SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
-    private ActivitySplashBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,21 +24,18 @@ public class SplashActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_splash);
         //setContentView(binding.getRoot());
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // on below line we are
-                // creating a new intent
-                Intent i = new Intent(SplashActivity.this, MapsActivity.class);
+        new Handler().postDelayed(() -> {
+            // on below line we are
+            // creating a new intent
+            Intent i = new Intent(SplashActivity.this, MapsActivity.class);
 
-                // on below line we are
-                // starting a new activity.
-                startActivity(i);
+            // on below line we are
+            // starting a new activity.
+            startActivity(i);
 
-                // on the below line we are finishing
-                // our current activity.
-                finish();
-            }
+            // on the below line we are finishing
+            // our current activity.
+            finish();
         }, 3000);
     }
 

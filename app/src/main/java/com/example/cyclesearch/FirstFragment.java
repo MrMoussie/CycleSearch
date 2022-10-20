@@ -17,7 +17,7 @@ public class FirstFragment extends Fragment {
 
     @Override
     public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
+            @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
         binding = FragmentFirstBinding.inflate(inflater, container, false);
@@ -28,13 +28,10 @@ public class FirstFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(FirstFragment.this)
-                        .navigate(R.id.action_firstFragment_to_secondFragment);
-                clicked = true;
-            }
+        binding.button2.setOnClickListener(view1 -> {
+            NavHostFragment.findNavController(FirstFragment.this)
+                    .navigate(R.id.action_firstFragment_to_secondFragment);
+            clicked = true;
         });
     }
 

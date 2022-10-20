@@ -3,22 +3,12 @@ package com.example.cyclesearch;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.os.Environment;
-
-
 import com.opencsv.CSVWriter;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.util.ArrayList;
 
 public class SensorActivity implements SensorEventListener {
 
-    // Sensor stuff
-    private ArrayList<Float> Acc;
-    private ArrayList<Float> Gyro;
     public MySensor sensor;
     public MySensor Mysensor;
 
@@ -26,31 +16,29 @@ public class SensorActivity implements SensorEventListener {
     int gyroCounter = 0;
     int counterThreshold = 10;
 
-    // Excel stuff
-    private MapsActivity main;
-    private File file;
-    private String activity = "if you see this, the activity is not set";
-    private Excel excel;
+    private final Excel excel;
 
-    public SensorActivity(MySensor sensor, MapsActivity map, File file, FileWriter outputfile, CSVWriter writer) {
+    public SensorActivity(MySensor sensor, CSVWriter writer) {
         this.sensor = sensor;
         Mysensor = sensor;
-        this.main = map;
-        this.file = file;
-        excel = new Excel(this.file, outputfile, writer);
+        excel = new Excel(writer);
     }
 
-    public SensorActivity() {}
-
+    /**
+     * Method that is invoked each time a new sensor measurement is taken
+     * @param sensorEvent object that allows for determining what kind of sensor provided the daty
+     * (Accelerometer or Gyrometer)
+     */
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         Sensor sensor = sensorEvent.sensor;
 
         switch(sensor.getType()) {
             case Sensor.TYPE_ACCELEROMETER:
-                Acc = new ArrayList<>();
+                // Sensor stuff
+                ArrayList<Float> acc = new ArrayList<>();
                 for (int i = 0; i < 3; i++) {
-                    Acc.add(sensorEvent.values[i]);
+                    acc.add(sensorEvent.values[i]);
                     if (i == 0) {
                         System.out.println("[Accelerometer value X]: " + sensorEvent.values[i]);
                     } else if (i == 1) {
@@ -62,15 +50,15 @@ public class SensorActivity implements SensorEventListener {
 
                 accCounter++;
                 if (accCounter > counterThreshold) {
-                    this.sensor.setAcc(Acc);
+                    this.sensor.setAcc(acc);
                     this.sensor.setTimestamp(sensorEvent.timestamp);
                 }
                 break;
 
             case Sensor.TYPE_GYROSCOPE:
-                Gyro = new ArrayList<>();
+                ArrayList<Float> gyro = new ArrayList<>();
                 for (int i = 0; i < 3; i++) {
-                    Gyro.add(sensorEvent.values[i]);
+                    gyro.add(sensorEvent.values[i]);
                     if (i == 0) {
                         System.out.println("[Accelerometer value X]: " + sensorEvent.values[i]);
                     } else if (i == 1) {
@@ -81,7 +69,7 @@ public class SensorActivity implements SensorEventListener {
                 }
                 gyroCounter++;
                 if (gyroCounter > counterThreshold) {
-                    this.sensor.setGyro(Gyro);
+                    this.sensor.setGyro(gyro);
                     this.sensor.setTimestamp(sensorEvent.timestamp);
                 }
                 break;

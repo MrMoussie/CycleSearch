@@ -35,6 +35,7 @@ import com.opencsv.CSVWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +45,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private SensorManager sensorManager;
     private MySensor mySensor;
-    private final File file = new File( Environment.getExternalStorageDirectory().getPath() + "/Documents/test.csv");
+    private File file = new File( Environment.getExternalStorageDirectory().getPath() + "/Documents/test.csv");
     private FileWriter outputfile;
     private CSVWriter writer;
     private SupportMapFragment mapFragment;
@@ -232,6 +233,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     turtle.animate().scaleY(.5f);
                     System.out.println("Should be rotating");
                 } else {
+                    if (!file.exists()) {
+                        System.out.println("New file created!");
+                        file = new File( Environment.getExternalStorageDirectory().getPath() + "/Documents/test.csv");
+                    }
                     System.out.println("Sensors ON");
                     sensorON();
                     turtle = findViewById(R.id.turtleWantsToSpin);

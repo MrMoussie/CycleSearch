@@ -63,6 +63,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private boolean init = false;
     private Excel excel;
 
+    /**
+     * Initial method of the application, invoked on the start. Contains all of the initializers for the buttons, views, layouts and map
+     * @param savedInstanceState instance used for starting the application
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,14 +135,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }).check();
     }
 
+    /**
+     * Method used for initializing the main components of the system: CSV writer & Sensors
+     */
     private void init() {
         try {
-//            if (file.exists()) {
-//                file = new File("/sdcard/Documents/testFile" + val++ + ".csv");
-//            } else {
-//                file = new File("/sdcard/Documents/testFile.csv");
-//            }
-
             // create FileWriter object with file as parameter
             outputfile = new FileWriter(file);
 
@@ -162,11 +163,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    /**
+     * Method used to turn the Accelerometer and Gyrometer sensors ON
+     */
     private void sensorON() {
         sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 200000);
         sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),200000);
     }
 
+    /**
+     * Method used to turn the Accelerometer and Gyrometer sensors OFF
+     */
     private void sensorOFF() {
         sensorManager.unregisterListener(sensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
         sensorManager.unregisterListener(sensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE));
@@ -196,6 +203,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onClick(View view) {
         ImageView turtle;
         switch(view.getId()) {
+            // Button used to switch between the main page, and the measurement/map page
             case R.id.button2:
                 FragmentManager fm = getSupportFragmentManager();
                 mapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapView);
@@ -209,12 +217,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     frame2.setVisibility(View.VISIBLE);
                 }
                 break;
+            // Button used to switch between the measurement page, and the main page
             case R.id.button_second:
                 button2 = findViewById(R.id.button_second);
                 button2.setOnClickListener(this);
                 findViewById(R.id.includeMain).setVisibility(View.VISIBLE);
                 frame2.setVisibility(View.GONE);
                 break;
+            // Button used to start the measurements
             case R.id.button_start:
                 if (!init) {
                     System.out.println("Sensors ON and system initialized");
@@ -231,24 +241,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     turtle.animate().scaleY(.5f);
                 }
                 break;
+            // Button used to reset the measurements (delete the file)
             case R.id.button_reset:
                 if (file == null) {
                     System.out.println("Nothing to delete");
-                    break;
                 }
-                //Animation for reset
                 turtle = findViewById(R.id.turtleWantsToSpin);
                 turtle.animate().rotationXBy(360f);
-                System.out.println("System RESET");
-                file.delete();
-                sensorOFF();
+                if (file.exists()) {
+                    System.out.println("System RESET, file DELETE");
+                    file.delete();
+                    sensorOFF();
+                }
                 break;
+            // Button used to stop the measurements (but not delete the file)
             case R.id.button_stop:
                 turtle = findViewById(R.id.turtleWantsToSpin);
                 turtle.animate().scaleX(1f);
                 turtle.animate().scaleY(1f);
                 turtle.animate().rotationXBy(360f);
-
                 System.out.println("Sensors OFF");
                 sensorOFF();
                 excel.writeData(new ArrayList<>(Arrays.asList(0.0f,0.0f,0.0f)), new ArrayList<>(Arrays.asList(0.0f,0.0f,0.0f)), 0, "init");

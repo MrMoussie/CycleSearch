@@ -15,6 +15,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,7 +56,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private SensorManager sensorManager;
     private Sensor sensor;
     private MySensor mySensor;
-    private File file = new File("/sdcard/Documents/testFile.csv");
+    private File file = new File(Environment.getExternalStorageDirectory().getPath() + "/Download/test.csv");
     private FileWriter outputfile;
     private CSVWriter writer;
     private SupportMapFragment mapFragment;
@@ -264,12 +265,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
                 //Animation for reset
 
-
                 turtle = (ImageView) findViewById(R.id.turtleWantsToSpin);
                 //Animation for reset
                 turtle.animate().rotationXBy(360f);
                 System.out.println("System RESET");
-             //  file.delete();
+             //   file.delete();
               //  sensorOFF();
                 break;
             case R.id.button_stop:

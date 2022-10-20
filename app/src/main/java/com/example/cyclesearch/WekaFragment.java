@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -18,6 +19,7 @@ public class WekaFragment extends Fragment {
 
     private FragmentWekaBinding binding;
     private final String TAG = "[SYSTEM]: ";
+
 
 
     @Override
@@ -43,6 +45,7 @@ public class WekaFragment extends Fragment {
         //Reset Button
         binding.button4.setOnClickListener
                 (v -> System.out.println(TAG + "The measurement was reset"));
+
 
         //Start button
         binding.startButton.setOnClickListener

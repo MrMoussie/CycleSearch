@@ -24,8 +24,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -73,12 +77,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private int val;
     private boolean init = false;
     private Excel excel;
-
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,11 +168,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void init() {
         try {
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            if (file.exists()) {
+//                file = new File("/sdcard/Documents/testFile" + val++ + ".csv");
+//            } else {
+//                file = new File("/sdcard/Documents/testFile.csv");
+//            }
+
             // create FileWriter object with file as parameter
             outputfile = new FileWriter(file);
 
@@ -195,20 +194,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    public static void verifyStoragePermissions(Activity activity) {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                    activity,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
         }
     }
 
@@ -243,6 +228,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onClick(View view) {
+        ImageView turtle = null;
         switch(view.getId()) {
             case R.id.button2:
                 FragmentManager fm = getSupportFragmentManager();
@@ -267,6 +253,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (init == false) {
                     System.out.println("Sensors ON and system initialized");
                     init();
+                    turtle = (ImageView) findViewById(R.id.turtleWantsToSpin);
+                    turtle.animate().scaleX(.5f);
+                    turtle.animate().scaleY(.5f);
+                   // turtle.animate().rotation(360f);
+                    System.out.println("Should be rotating");
                 } else {
                     System.out.println("Sensors ON");
                     sensorON();
@@ -277,11 +268,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     System.out.println("Nothing to delete");
                     break;
                 }
+                //Animation for reset
+
+                turtle = (ImageView) findViewById(R.id.turtleWantsToSpin);
+                //Animation for reset
+                turtle.animate().rotationXBy(360f);
                 System.out.println("System RESET");
                 file.delete();
                 sensorOFF();
                 break;
             case R.id.button_stop:
+                turtle = (ImageView) findViewById(R.id.turtleWantsToSpin);
+                turtle.animate().scaleX(1f);
+                turtle.animate().scaleY(1f);
+                turtle.animate().rotationXBy(360f);
+
                 System.out.println("Sensors OFF");
                 sensorOFF();
                 excel.writeData(new ArrayList<>(Arrays.asList(0.0f,0.0f,0.0f)), new ArrayList<>(Arrays.asList(0.0f,0.0f,0.0f)), 0, "init");

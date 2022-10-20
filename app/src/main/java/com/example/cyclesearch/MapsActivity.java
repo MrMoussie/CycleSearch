@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
-import androidx.navigation.ui.AppBarConfiguration;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -43,7 +42,6 @@ import java.util.List;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
 
     private GoogleMap mMap;
-    private AppBarConfiguration appBarConfiguration;
     private SensorManager sensorManager;
     private MySensor mySensor;
     private final File file = new File( Environment.getExternalStorageDirectory().getPath() + "/Documents/test.csv");
@@ -248,6 +246,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
                 turtle = findViewById(R.id.turtleWantsToSpin);
                 turtle.animate().rotationXBy(360f);
+                assert file != null;
                 if (file.exists()) {
                     System.out.println("System RESET, file DELETE");
                     file.delete();
@@ -261,8 +260,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 turtle.animate().scaleY(1f);
                 turtle.animate().rotationXBy(360f);
                 System.out.println("Sensors OFF");
-                sensorOFF();
-                excel.writeData(new ArrayList<>(Arrays.asList(0.0f,0.0f,0.0f)), new ArrayList<>(Arrays.asList(0.0f,0.0f,0.0f)), 0, "init");
+                if (sensorActivity != null) {
+                    sensorOFF();
+                    excel.writeData(new ArrayList<>(Arrays.asList(0.0f,0.0f,0.0f)), new ArrayList<>(Arrays.asList(0.0f,0.0f,0.0f)), 0, "init");
+                }
                 break;
             case R.id.activityButton:
                 System.out.println("System GO BACK");

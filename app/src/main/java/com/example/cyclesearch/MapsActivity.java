@@ -59,7 +59,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private SensorManager sensorManager;
     private Sensor sensor;
     private MySensor mySensor;
-    private File file = new File( Environment.getExternalStorageDirectory().getPath() + "/Download/test.csv");
+    private File file = new File( Environment.getExternalStorageDirectory().getPath() + "/Documents/test.csv");
     private FileWriter outputfile;
     private CSVWriter writer;
     private SupportMapFragment mapFragment;
@@ -138,9 +138,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
                         if (multiplePermissionsReport.areAllPermissionsGranted()) {
                             System.out.println("[SYSTEM] PERMISSION GRANTED!");
+                            System.out.println(Environment.getExternalStorageDirectory().getPath());
 
-                            //TODO
-                            // Gotta fix the permissions for writing and reading and opening and creating the file
+//                            // Gotta fix the permissions for writing and reading and opening and creating the file
 //                            new Handler().postDelayed(new Runnable() {
 //                                @Override
 //                                public void run() {
@@ -261,6 +261,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 } else {
                     System.out.println("Sensors ON");
                     sensorON();
+                    turtle = (ImageView) findViewById(R.id.turtleWantsToSpin);
+                    turtle.animate().scaleX(.5f);
+                    turtle.animate().scaleY(.5f);
                 }
                 break;
             case R.id.button_reset:

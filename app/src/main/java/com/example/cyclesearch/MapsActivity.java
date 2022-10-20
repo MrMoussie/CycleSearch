@@ -55,7 +55,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private SensorManager sensorManager;
     private Sensor sensor;
     private MySensor mySensor;
-    private File file = new File( Environment.getExternalStorageDirectory().getPath() + "/Documents/test.csv");
+    private File file = new File( Environment.getExternalStorageDirectory().getPath() + "/Download/test.csv");
     private FileWriter outputfile;
     private CSVWriter writer;
     private SupportMapFragment mapFragment;
@@ -131,8 +131,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         Dexter.withContext(getApplicationContext())
                 .withPermissions(
-                        Manifest.permission.BLUETOOTH_ADMIN,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
+//                        Manifest.permission.BLUETOOTH_ADMIN,
+//                        Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ).withListener(new MultiplePermissionsListener() {
@@ -140,29 +140,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
                         if (multiplePermissionsReport.areAllPermissionsGranted()) {
                             System.out.println("[SYSTEM] PERMISSION GRANTED!");
-                            init();
 
                             //TODO
                             // Gotta fix the permissions for writing and reading and opening and creating the file
-                            // How, i don't know
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    // on below line we are
-                                    // creating a new intent
-                                    Intent i = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-                                    i.addCategory(Intent.CATEGORY_OPENABLE);
-                                    i.setType("application/csv");
-                                    i.putExtra(Intent.EXTRA_TITLE, "measurements.csv");
-                                    // on below line we are
-                                    // starting a new activity.
-                                    startActivity(i);
-
-                                    // on the below line we are finishing
-                                    // our current activity.
-                                    finish();
-                                }
-                            }, 3000);
+//                            new Handler().postDelayed(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    // on below line we are
+//                                    // creating a new intent
+//                                    Intent i = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+//                                    i.addCategory(Intent.CATEGORY_OPENABLE);
+//                                    i.setType("application/csv");
+//                                    i.putExtra(Intent.EXTRA_TITLE, "test.csv");
+//                                    startActivity(i);
+//
+//                                    // on the below line we are finishing
+//                                    // our current activity.
+//                                }
+//                            }, 3000);
                         }
                     }
 

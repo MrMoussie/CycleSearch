@@ -11,19 +11,10 @@
         tools:layout="@layout/fragment_first" >
         <action
             android:id="@+id/action_firstFragment_to_mapFragment"
-            app:destination="@id/mapFragment" />
+            app:destination="@id/mapView" />
         <action
             android:id="@+id/action_firstFragment_to_secondFragment"
             app:destination="@id/secondFragment2" />
-    </fragment>
-    <fragment
-        android:id="@+id/mapFragment"
-        android:name="com.example.cyclesearch.MapFragment"
-        android:label="fragment_map"
-        tools:layout="@layout/fragment_map" >
-        <action
-            android:id="@+id/action_mapFragment_to_firstFragment"
-            app:destination="@id/firstFragment" />
     </fragment>
     <fragment
         android:id="@+id/secondFragment2"

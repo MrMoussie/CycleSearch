@@ -35,7 +35,6 @@ import com.opencsv.CSVWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -176,8 +175,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void sensorOFF() {
         sensorManager.unregisterListener(sensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
         sensorManager.unregisterListener(sensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE));
-        sensorActivity.resetAccCounter();
-        sensorActivity.resetGyroCounter();
+
+        if (sensorActivity != null) {
+            sensorActivity.resetAccCounter();
+            sensorActivity.resetGyroCounter();
+        }
     }
 
     /**

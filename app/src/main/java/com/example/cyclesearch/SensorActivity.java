@@ -23,7 +23,6 @@ public class SensorActivity implements SensorEventListener {
         Mysensor = sensor;
         excel = new Excel(writer);
     }
-
     /**
      * Method that is invoked each time a new sensor measurement is taken
      * @param sensorEvent object that allows for determining what kind of sensor provided the daty

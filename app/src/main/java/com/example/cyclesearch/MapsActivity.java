@@ -67,35 +67,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.main_screen);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-//        button1 = findViewById(R.id.button2);
-//        button1.setOnClickListener(this);
-//        button2 = findViewById(R.id.button_second);
-//        button2.setOnClickListener(this);
 
         frame2 = findViewById(R.id.ConstraintLayout);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-
-//        RadioGroup radioGroup =( findViewById(R.id.radioGroup));
-//        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-//            if(checkedId == R.id.bikingButton && mySensor != null){
-//                System.out.println("You are now biking");
-//                mySensor.setActivity("Biking");
-//            }
-//            else if(checkedId == R.id.walkingButton && mySensor != null){
-//                System.out.println("You are now walking");
-//                mySensor.setActivity("Walking");
-//            }
-//            else if(checkedId == R.id.standingButton && mySensor != null){
-//                System.out.println("You are standing");
-//                mySensor.setActivity("Standing");
-//            }
-//            else if(checkedId == R.id.sittingButton && mySensor != null){
-//                System.out.println("You are now sitting");
-//                mySensor.setActivity("Sitting");
-//            }
-//
-//        });
 
         Dexter.withContext(getApplicationContext())
                 .withPermissions(
@@ -217,3 +192,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 }
+
+
+//        RadioGroup radioGroup =( findViewById(R.id.radioGroup));
+//        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+//            if(checkedId == R.id.bikingButton && mySensor != null){
+//                System.out.println("You are now biking");
+//                mySensor.setActivity("Biking");
+//            }
+//            else if(checkedId == R.id.walkingButton && mySensor != null){
+//                System.out.println("You are now walking");
+//                mySensor.setActivity("Walking");
+//            }
+//            else if(checkedId == R.id.standingButton && mySensor != null){
+//                System.out.println("You are standing");
+//                mySensor.setActivity("Standing");
+//            }
+//            else if(checkedId == R.id.sittingButton && mySensor != null){
+//                System.out.println("You are now sitting");
+//                mySensor.setActivity("Sitting");
+//            }
+//
+//        });

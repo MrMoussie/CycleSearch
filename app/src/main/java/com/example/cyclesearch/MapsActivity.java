@@ -81,12 +81,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private int val;
     private boolean init = false;
     private Excel excel;
+    private static MapStyleOptions coldStyle;
+    private static MapStyleOptions warmStyle;
+    private static MapStyleOptions hotStyle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        coldStyle = MapStyleOptions.loadRawResourceStyle(this, R.raw.colder);
+        warmStyle = MapStyleOptions.loadRawResourceStyle(this, R.raw.warmer);
+        hotStyle = MapStyleOptions.loadRawResourceStyle(this, R.raw.hot);
+
+        System.out.println("OUTPUT CREATE: " + coldStyle);
 
         button1 = (Button) findViewById(R.id.button2);
         button1.setOnClickListener(this);
@@ -225,8 +234,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(this, R.raw.colder);
-        mMap.setMapStyle(style);
+
         /*try {
             // Customise the styling of the base map using a JSON object defined
             // in a raw resource file.
@@ -248,8 +256,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    public void setColdMap(GoogleMap map) { if (map != null && coldStyle != null) map.setMapStyle(coldStyle); }
+
+    public void setWarmMap(GoogleMap map) { if (map != null && warmStyle != null) map.setMapStyle(warmStyle); }
+
+    public void setHotMap(GoogleMap map) { if (map != null && hotStyle != null) map.setMapStyle(hotStyle); }
+
     @Override
     public void onClick(View view) {
+        System.out.println("BEFORE " + this.coldStyle);
         ImageView turtle = null;
         switch(view.getId()) {
             case R.id.button2:
@@ -264,6 +279,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     findViewById(R.id.includeMain).setVisibility(View.GONE);
                     frame2.setVisibility(View.VISIBLE);
                 }
+
                 break;
             case R.id.button_second:
                 button2 = (Button) findViewById(R.id.button_second);

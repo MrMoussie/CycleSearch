@@ -22,7 +22,13 @@
         <entry key="..\:/Users/Erik/StudioProjects/CycleSearch/app/src/main/res/layout/fragment_start_page.xml" value="0.1" />
         <entry key="..\:/Users/Erik/StudioProjects/CycleSearch/app/src/main/res/layout/fragment_weka.xml" value="0.1" />
         <entry key="..\:/Users/Erik/StudioProjects/CycleSearch/app/src/main/res/layout/layout_resource.xml" value="0.1693840579710145" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.165" />
         <entry key="app/src/main/res/layout/activity_maps.xml" value="0.14336372847011145" />
+        <entry key="app/src/main/res/layout/content_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_first.xml" value="0.21400146484375004" />
+        <entry key="app/src/main/res/layout/login_screen.xml" value="0.203125" />
+        <entry key="app/src/main/res/layout/main_screen.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/register_screen.xml" value="0.203125" />
       </map>
     </option>
   </component>

@@ -50,18 +50,4 @@
         app:layout_constraintTop_toTopOf="@+id/imageView8"
         app:layout_constraintVertical_bias="0.544" />
 
-    <Button
-        android:id="@+id/activityButton"
-        android:layout_width="188dp"
-        android:layout_height="55dp"
-        android:layout_marginTop="29dp"
-        android:layout_marginBottom="40dp"
-        android:background="@drawable/corner_radius"
-        android:text="Measure activity"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

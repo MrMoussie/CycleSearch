@@ -3,9 +3,6 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="../../../../layout/custom_preview.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.165" />
-        <entry key="app/src/main/res/layout/activity_main2.xml" value="0.1" />
         <entry key="..\:/Users/Erik/StudioProjects/CycleSearch/app/src/main/res/drawable/background_layout.xml" value="0.1" />
         <entry key="..\:/Users/Erik/StudioProjects/CycleSearch/app/src/main/res/drawable/corner_radius.xml" value="0.105" />
         <entry key="..\:/Users/Erik/StudioProjects/CycleSearch/app/src/main/res/layout/activity_main.xml" value="0.16666666666666666" />
@@ -24,17 +21,10 @@
         <entry key="..\:/Users/Erik/StudioProjects/CycleSearch/app/src/main/res/layout/fragment_splash.xml" value="0.121875" />
         <entry key="..\:/Users/Erik/StudioProjects/CycleSearch/app/src/main/res/layout/fragment_start_page.xml" value="0.1" />
         <entry key="..\:/Users/Erik/StudioProjects/CycleSearch/app/src/main/res/layout/fragment_weka.xml" value="0.1" />
+        <entry key="..\:/Users/Erik/StudioProjects/CycleSearch/app/src/main/res/layout/layout_resource.xml" value="0.1693840579710145" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.165" />
         <entry key="app/src/main/res/layout/activity_maps.xml" value="0.14336372847011145" />
-        <entry key="app/src/main/res/layout/content_main.xml" value="0.165" />
-        <entry key="app/src/main/res/layout/content_main2.xml" value="0.15070921985815602" />
-        <entry key="app/src/main/res/layout/content_splash.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/fragment_first2.xml" value="0.15070921985815602" />
-        <entry key="app/src/main/res/layout/fragment_second.xml" value="0.22447916666666667" />
-        <entry key="app/src/main/res/layout/fragment_second2.xml" value="0.2771145543308123" />
-        <entry key="app/src/main/res/layout/fragment_weka.xml" value="0.18840579710144928" />
-        <entry key="app/src/main/res/layout/splash.xml" value="0.188690185546875" />
-        <entry key="app/src/main/res/menu/menu_main.xml" value="0.184375" />
       </map>
     </option>
   </component>

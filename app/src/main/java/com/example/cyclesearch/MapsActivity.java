@@ -50,11 +50,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private SupportMapFragment mapFragment;
     private Button button1;
     private Button button2;
-    private Button button3;
-    private Button button4;
-    private Button button5;
-    private Button button6;
-    private Button button7;
     private ConstraintLayout frame2;
     private SensorEventListener sensorListener;
     private SensorActivity sensorActivity;
@@ -75,41 +70,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         button1.setOnClickListener(this);
         button2 = findViewById(R.id.button_second);
         button2.setOnClickListener(this);
-        button3 = findViewById(R.id.button_start);
-        button3.setOnClickListener(this);
-        button4 = findViewById(R.id.button_stop);
-        button4.setOnClickListener(this);
-        button5 = findViewById(R.id.button_reset);
-        button5.setOnClickListener(this);
-        button6 = findViewById(R.id.activityButton);
-        button6.setOnClickListener(this);
-        button7 = findViewById(R.id.buttonBack);
-        button7.setOnClickListener(this);
 
         frame2 = findViewById(R.id.ConstraintLayout);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-
-        RadioGroup radioGroup =( findViewById(R.id.radioGroup));
-        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            if(checkedId == R.id.bikingButton && mySensor != null){
-                System.out.println("You are now biking");
-                mySensor.setActivity("Biking");
-            }
-            else if(checkedId == R.id.walkingButton && mySensor != null){
-                System.out.println("You are now walking");
-                mySensor.setActivity("Walking");
-            }
-            else if(checkedId == R.id.standingButton && mySensor != null){
-                System.out.println("You are standing");
-                mySensor.setActivity("Standing");
-            }
-            else if(checkedId == R.id.sittingButton && mySensor != null){
-                System.out.println("You are now sitting");
-                mySensor.setActivity("Sitting");
-            }
-
-        });
 
         Dexter.withContext(getApplicationContext())
                 .withPermissions(
@@ -224,65 +188,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 button2.setOnClickListener(this);
                 findViewById(R.id.includeMain).setVisibility(View.VISIBLE);
                 frame2.setVisibility(View.GONE);
-                break;
-            // Button used to start the measurements
-            case R.id.button_start:
-                if (!init) {
-                    System.out.println("Sensors ON and system initialized");
-                    init();
-                    turtle = findViewById(R.id.turtleWantsToSpin);
-                    turtle.animate().scaleX(.5f);
-                    turtle.animate().scaleY(.5f);
-                    System.out.println("Should be rotating");
-                } else {
-                    if (!file.exists()) {
-                        System.out.println("New file created!");
-                        file = new File( Environment.getExternalStorageDirectory().getPath() + "/Documents/test.csv");
-                    }
-                    System.out.println("Sensors ON");
-                    sensorON();
-                    turtle = findViewById(R.id.turtleWantsToSpin);
-                    turtle.animate().scaleX(.5f);
-                    turtle.animate().scaleY(.5f);
-                }
-                break;
-            // Button used to reset the measurements (delete the file)
-            case R.id.button_reset:
-                if (file == null) {
-                    System.out.println("Nothing to delete");
-                }
-                turtle = findViewById(R.id.turtleWantsToSpin);
-                turtle.animate().rotationXBy(360f);
-                assert file != null;
-                if (file.exists()) {
-                    System.out.println("System RESET, file DELETE");
-                    file.delete();
-                    sensorOFF();
-                }
-                break;
-            // Button used to stop the measurements (but not delete the file)
-            case R.id.button_stop:
-                turtle = findViewById(R.id.turtleWantsToSpin);
-                turtle.animate().scaleX(1f);
-                turtle.animate().scaleY(1f);
-                turtle.animate().rotationXBy(360f);
-                System.out.println("Sensors OFF");
-                if (sensorActivity != null) {
-                    sensorOFF();
-                    excel.writeData(new ArrayList<>(Arrays.asList(0.0f,0.0f,0.0f)), new ArrayList<>(Arrays.asList(0.0f,0.0f,0.0f)), 0, "init");
-                }
-                break;
-            case R.id.activityButton:
-                System.out.println("System GO BACK");
-                findViewById(R.id.includeWeka).setVisibility(View.VISIBLE);
-                frame2.setVisibility(View.GONE);
-                findViewById(R.id.includeMain).setVisibility(View.GONE);
-                break;
-            case R.id.buttonBack:
-                System.out.println("System GO BACK");
-                findViewById(R.id.includeWeka).setVisibility(View.GONE);
-                frame2.setVisibility(View.GONE);
-                findViewById(R.id.includeMain).setVisibility(View.VISIBLE);
                 break;
             default:
                 System.out.println("Entered default");

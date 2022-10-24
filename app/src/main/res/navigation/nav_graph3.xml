@@ -3,15 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph3"
-    app:startDestination="@id/firstFragment">
+    app:startDestination="@id/mainScreen">
     <fragment
         android:id="@+id/firstFragment"
         android:name="com.example.cyclesearch.FirstFragment"
         android:label="fragment_first"
         tools:layout="@layout/fragment_first" >
-        <action
-            android:id="@+id/action_firstFragment_to_mapFragment"
-            app:destination="@id/mapView" />
         <action
             android:id="@+id/action_firstFragment_to_secondFragment"
             app:destination="@id/secondFragment2" />
@@ -23,6 +20,38 @@
         tools:layout="@layout/fragment_second" >
         <action
             android:id="@+id/action_secondFragment2_to_firstFragment"
+            app:destination="@id/firstFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/mainScreen"
+        android:name="com.example.cyclesearch.MainScreen"
+        android:label="main_screen"
+        tools:layout="@layout/main_screen" >
+        <action
+            android:id="@+id/mainScreen_to_loginScreen"
+            app:destination="@id/loginScreen" />
+        <action
+            android:id="@+id/mainScreen_to_registerScreen"
+            app:destination="@id/registerScreen" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/loginScreen"
+        android:name="com.example.cyclesearch.LoginScreen"
+        android:label="login_screen"
+        tools:layout="@layout/login_screen" >
+    <action
+        android:id="@+id/loginScreen_to_firstFragment"
+        app:destination="@id/firstFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerScreen"
+        android:name="com.example.cyclesearch.RegisterScreen"
+        android:label="register_screen"
+        tools:layout="@layout/register_screen" >
+        <action
+            android:id="@+id/registerScreen_to_fragmentFirst"
             app:destination="@id/firstFragment" />
     </fragment>
 </navigation>

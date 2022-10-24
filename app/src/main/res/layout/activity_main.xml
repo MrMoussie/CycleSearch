@@ -18,10 +18,9 @@
         android:visibility="visible" />
 
     <include
-        android:id="@+id/includeWeka"
-        android:visibility="gone"
-        layout="@layout/fragment_weka"
-        />
+        android:id="@+id/includeMainScreen"
+        layout="@layout/main_screen"
+        android:visibility="visible" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ConstraintLayout"
@@ -44,24 +43,6 @@
             app:layout_constraintVertical_bias="1.0"></com.google.android.gms.maps.MapView>
 
         <Button
-            android:id="@+id/button_start"
-            android:layout_width="213dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="109dp"
-            android:layout_marginTop="450dp"
-            android:layout_marginEnd="107dp"
-            android:layout_marginBottom="97dp"
-            android:orientation="vertical"
-            android:text="Start Measurements"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.333"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"
-            android:background="@drawable/corner_radius"/>
-
-        <Button
             android:id="@+id/button_second"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -76,111 +57,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:background="@drawable/corner_radius"/>
 
-        <Button
-            android:id="@+id/button_reset"
-            android:layout_width="109dp"
-            android:layout_height="46dp"
-            android:layout_marginStart="254dp"
-            android:layout_marginTop="298dp"
-            android:layout_marginEnd="69dp"
-            android:layout_marginBottom="385dp"
-            android:background="@drawable/corner_radius"
-            android:text="@string/reset"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/button_stop"
-            android:layout_width="213dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="103dp"
-            android:layout_marginTop="646dp"
-            android:layout_marginEnd="95dp"
-            android:layout_marginBottom="35dp"
-            android:gravity="center"
-            android:text="Stop Measurements"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:background="@drawable/corner_radius"/>
-
-        <RadioGroup
-            android:id="@+id/radioGroup"
-            android:layout_width="207dp"
-            android:layout_height="202dp"
-            android:layout_marginStart="101dp"
-            android:layout_marginTop="388dp"
-            android:layout_marginEnd="102dp"
-            android:layout_marginBottom="197dp"
-            android:background="@drawable/background_layout"
-            android:gravity="center"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.519">
-
-            <RadioButton
-                android:id="@+id/bikingButton"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:text="Biking"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.478"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView"
-                tools:ignore="MissingConstraints"
-
-                />
-
-            <RadioButton
-                android:id="@+id/walkingButton"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:text="Walking"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.495"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/bikingButton"
-                tools:ignore="MissingConstraints" />
-
-            <RadioButton
-                android:id="@+id/standingButton"
-                android:layout_width="143dp"
-                android:layout_height="wrap_content"
-                android:text="Standing"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/walkingButton"
-                tools:ignore="MissingConstraints" />
-
-            <RadioButton
-                android:id="@+id/sittingButton"
-                android:layout_width="144dp"
-                android:layout_height="wrap_content"
-                android:text="Sitting"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.48"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/standingButton"
-                tools:ignore="MissingConstraints" />
-
-        </RadioGroup>
-
-        <ImageView
-            android:id="@+id/turtleWantsToSpin"
-            android:layout_width="82dp"
-            android:layout_height="71dp"
-            app:layout_constraintBottom_toTopOf="@+id/radioGroup"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mapView"
-            app:srcCompat="@drawable/turtle" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

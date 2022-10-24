@@ -32,15 +32,25 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.opencsv.CSVWriter;
 
+import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.BeaconParser;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
 
+    private static final String IBEACON = "m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24";
+    private static String ESPMac = "EC:62:60:B2:C1";
+    private double prevRSSI = Double.NEGATIVE_INFINITY;
+    private double threshold = 5;
+    private BeaconManager beaconManager;
     private GoogleMap mMap;
     private SensorManager sensorManager;
     private MySensor mySensor;
@@ -99,6 +109,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     private void init() {
         try {
+            bluetoothSetup();
+
             // create FileWriter object with file as parameter
             outputfile = new FileWriter(file);
 
@@ -120,6 +132,35 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void bluetoothSetup(){
+        this.beaconManager =  BeaconManager.getInstanceForApplication(this);
+        this.beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout(IBEACON));
+        this.beaconManager.addRangeNotifier((beacons, region) -> {
+            if (beacons.size() > 0) {
+
+                for (Beacon beacon : beacons) {
+                    System.out.println("[SYSTEM] FOUND DEVICE WITH RSSI " + beacon.getRssi() + " WITH ADDRESS " + beacon.getBluetoothAddress()
+                            + " WITH ID3 " + beacon.getId3());
+                    if(beacon.getBluetoothAddress().equals(ESPMac)){
+                        //Found our beacon
+                        double RSSI = beacon.getRssi();
+                        if(prevRSSI != Double.NEGATIVE_INFINITY) {
+                            if (Math.abs(RSSI - prevRSSI) <= threshold) {
+                                //no change
+
+                            } else if (RSSI - prevRSSI > threshold) {
+                                //getting better
+                            } else {
+                                //getting worse
+                            }
+                        }
+                        prevRSSI = RSSI;
+                    }
+                }
+            }
+        });
     }
 
     /**

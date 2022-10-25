@@ -2,8 +2,8 @@ package com.example.cyclesearch;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageButton;
-import androidx.fragment.app.Fragment;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -34,14 +34,25 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.opencsv.CSVWriter;
 
+import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.BeaconParser;
+import org.altbeacon.beacon.Region;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
 
+    private static final String IBEACON = "m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24";
+    private static String ESPMac = "EC:62:60:B2:C1:46";
+    private double prevRSSI = Double.NEGATIVE_INFINITY;
+    private double threshold = 5;
+    private BeaconManager beaconManager;
     private GoogleMap mMap;
     private SensorManager sensorManager;
     private MySensor mySensor;
@@ -59,6 +70,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private View map;
     private SensorEventListener sensorListener;
     private SensorActivity sensorActivity;
+    private boolean init = false;
+    private Excel excel;
+    private Collection<Beacon> currentBeacons;
     private View find_beacon;
     private View find_bike;
     private ArrayAdapter arrayAdapter;
@@ -103,8 +117,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         Dexter.withContext(getApplicationContext())
                 .withPermissions(
-//                        Manifest.permission.BLUETOOTH_ADMIN,
-//                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.BLUETOOTH_ADMIN,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ).withListener(new MultiplePermissionsListener() {
@@ -112,7 +126,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
                         if (multiplePermissionsReport.areAllPermissionsGranted()) {
                             System.out.println("[SYSTEM] PERMISSION GRANTED!");
-                            System.out.println(Environment.getExternalStorageDirectory().getPath());
+                            bluetoothSetup();
                         }
                     }
 
@@ -141,13 +155,51 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mySensor = new MySensor();
             sensorListener = new SensorActivity(mySensor, writer);
             sensorActivity = (SensorActivity) sensorListener;
-            Excel excel = sensorActivity.getExcel();
+            excel = sensorActivity.getExcel();
             sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 200000);
             sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),200000);
+            init = true;
         }
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void bluetoothSetup(){
+        this.beaconManager =  BeaconManager.getInstanceForApplication(this);
+        this.beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout(IBEACON));
+        this.beaconManager.addRangeNotifier((beacons, region) -> {
+            System.out.println("[ENTERED] with array size: " + beacons.size());
+            if (beacons.size() > 0) {
+
+                if (ESPMac == null) {
+                    this.currentBeacons = beacons;
+                } else {
+                    for (Beacon beacon : beacons) {
+                        System.out.println("[SYSTEM] FOUND DEVICE WITH RSSI " + beacon.getRssi() + " WITH ADDRESS " + beacon.getBluetoothAddress()
+                                + " WITH ID3 " + beacon.getId3() + " WITH NAME " + beacon.getBluetoothName());
+                        if(beacon.getBluetoothAddress().equals(ESPMac)) {
+                            System.out.println("[FOUND OUR BEACON]");
+                            //Found our beacon
+                            double RSSI = beacon.getRssi();
+                            if(prevRSSI != Double.NEGATIVE_INFINITY) {
+                                if (Math.abs(RSSI - prevRSSI) <= threshold) {
+                                    //no change
+
+                                } else if (RSSI - prevRSSI > threshold) {
+                                    //getting better
+                                } else {
+                                    //getting worse
+                                }
+                            }
+                            prevRSSI = RSSI;
+                        }
+                    }
+                }
+            }
+        });
+
+        this.beaconManager.startRangingBeacons(new Region("myRangingUniqueId", null, null, null));
     }
 
     /**

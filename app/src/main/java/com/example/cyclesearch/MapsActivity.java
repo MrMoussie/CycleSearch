@@ -33,6 +33,7 @@ import com.opencsv.CSVWriter;
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
+import org.altbeacon.beacon.Region;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -43,7 +44,7 @@ import java.util.List;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
 
     private static final String IBEACON = "m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24";
-    private static String ESPMac = "EC:62:60:B2:C1";
+    private static String ESPMac = "EC:62:60:B2:C1:46";
     private double prevRSSI = Double.NEGATIVE_INFINITY;
     private double threshold = 5;
     private BeaconManager beaconManager;
@@ -71,9 +72,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_screen);
+        setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        button1 = (Button) findViewById(R.id.button2);
+        button1.setOnClickListener(this);
+        button2 = (Button) findViewById(R.id.button_second);
+        button2.setOnClickListener(this);
 
         frame2 = findViewById(R.id.ConstraintLayout);
 
@@ -134,6 +139,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.beaconManager =  BeaconManager.getInstanceForApplication(this);
         this.beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout(IBEACON));
         this.beaconManager.addRangeNotifier((beacons, region) -> {
+            System.out.println("[ENTERED] with array size: " + beacons.size());
             if (beacons.size() > 0) {
 
                 if (ESPMac == null) {
@@ -141,8 +147,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 } else {
                     for (Beacon beacon : beacons) {
                         System.out.println("[SYSTEM] FOUND DEVICE WITH RSSI " + beacon.getRssi() + " WITH ADDRESS " + beacon.getBluetoothAddress()
-                                + " WITH ID3 " + beacon.getId3());
+                                + " WITH ID3 " + beacon.getId3() + " WITH NAME " + beacon.getBluetoothName());
                         if(beacon.getBluetoothAddress().equals(ESPMac)) {
+                            System.out.println("[FOUND OUR BEACON]");
                             //Found our beacon
                             double RSSI = beacon.getRssi();
                             if(prevRSSI != Double.NEGATIVE_INFINITY) {
@@ -161,6 +168,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         });
+
+        this.beaconManager.startRangingBeacons(new Region("myRangingUniqueId", null, null, null));
     }
 
     /**

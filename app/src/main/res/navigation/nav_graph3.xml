@@ -5,23 +5,10 @@
     android:id="@+id/nav_graph3"
     app:startDestination="@id/mainScreen">
     <fragment
-        android:id="@+id/firstFragment"
-        android:name="com.example.cyclesearch.FirstFragment"
-        android:label="fragment_first"
-        tools:layout="@layout/fragment_first" >
-        <action
-            android:id="@+id/action_firstFragment_to_secondFragment"
-            app:destination="@id/secondFragment2" />
-    </fragment>
-    <fragment
         android:id="@+id/secondFragment2"
         android:name="com.example.cyclesearch.SecondFragment"
         android:label="fragment_second"
-        tools:layout="@layout/fragment_second" >
-        <action
-            android:id="@+id/action_secondFragment2_to_firstFragment"
-            app:destination="@id/firstFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_second" />
 
     <fragment
         android:id="@+id/mainScreen"
@@ -29,29 +16,32 @@
         android:label="main_screen"
         tools:layout="@layout/main_screen" >
         <action
-            android:id="@+id/mainScreen_to_loginScreen"
-            app:destination="@id/loginScreen" />
+            android:id="@+id/mainScreen_to_findBeacon"
+            app:destination="@id/findBeacon2" />
         <action
-            android:id="@+id/mainScreen_to_registerScreen"
-            app:destination="@id/registerScreen" />
+        android:id="@+id/mainScreen_to_findBike"
+        app:destination="@id/findBike2" />
+    </fragment>
+    <fragment
+        android:id="@+id/findBike2"
+        android:name="com.example.cyclesearch.FindBike"
+        android:label="find_bike"
+        tools:layout="@layout/find_bike" >
+
+        <action
+        android:id="@+id/findBike_to_map"
+        app:destination="@id/secondFragment2" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/findBeacon2"
+        android:name="com.example.cyclesearch.FindBeacon"
+        android:label="find_beacon"
+        tools:layout="@layout/find_beacon" >
+        <action
+        android:id="@+id/findBeacon_to_mainScreen"
+        app:destination="@id/mainScreen" />
+
     </fragment>
 
-    <fragment
-        android:id="@+id/loginScreen"
-        android:name="com.example.cyclesearch.LoginScreen"
-        android:label="login_screen"
-        tools:layout="@layout/login_screen" >
-    <action
-        android:id="@+id/loginScreen_to_firstFragment"
-        app:destination="@id/firstFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/registerScreen"
-        android:name="com.example.cyclesearch.RegisterScreen"
-        android:label="register_screen"
-        tools:layout="@layout/register_screen" >
-        <action
-            android:id="@+id/registerScreen_to_fragmentFirst"
-            app:destination="@id/firstFragment" />
-    </fragment>
 </navigation>

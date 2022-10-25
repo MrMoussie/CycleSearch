@@ -16,8 +16,6 @@ import android.os.Environment;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RadioGroup;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -39,10 +37,8 @@ import org.altbeacon.beacon.BeaconParser;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
 
@@ -66,6 +62,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private SensorActivity sensorActivity;
     private boolean init = false;
     private Excel excel;
+    private Collection<Beacon> currentBeacons;
 
     /**
      * Initial method of the application, invoked on the start. Contains all of the initializers for the buttons, views, layouts and map
@@ -140,23 +137,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.beaconManager.addRangeNotifier((beacons, region) -> {
             if (beacons.size() > 0) {
 
-                for (Beacon beacon : beacons) {
-                    System.out.println("[SYSTEM] FOUND DEVICE WITH RSSI " + beacon.getRssi() + " WITH ADDRESS " + beacon.getBluetoothAddress()
-                            + " WITH ID3 " + beacon.getId3());
-                    if(beacon.getBluetoothAddress().equals(ESPMac)){
-                        //Found our beacon
-                        double RSSI = beacon.getRssi();
-                        if(prevRSSI != Double.NEGATIVE_INFINITY) {
-                            if (Math.abs(RSSI - prevRSSI) <= threshold) {
-                                //no change
+                if (ESPMac == null) {
+                    this.currentBeacons = beacons;
+                } else {
+                    for (Beacon beacon : beacons) {
+                        System.out.println("[SYSTEM] FOUND DEVICE WITH RSSI " + beacon.getRssi() + " WITH ADDRESS " + beacon.getBluetoothAddress()
+                                + " WITH ID3 " + beacon.getId3());
+                        if(beacon.getBluetoothAddress().equals(ESPMac)) {
+                            //Found our beacon
+                            double RSSI = beacon.getRssi();
+                            if(prevRSSI != Double.NEGATIVE_INFINITY) {
+                                if (Math.abs(RSSI - prevRSSI) <= threshold) {
+                                    //no change
 
-                            } else if (RSSI - prevRSSI > threshold) {
-                                //getting better
-                            } else {
-                                //getting worse
+                                } else if (RSSI - prevRSSI > threshold) {
+                                    //getting better
+                                } else {
+                                    //getting worse
+                                }
                             }
+                            prevRSSI = RSSI;
                         }
-                        prevRSSI = RSSI;
                     }
                 }
             }

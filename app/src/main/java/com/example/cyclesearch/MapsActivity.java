@@ -2,6 +2,7 @@ package com.example.cyclesearch;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 
@@ -255,12 +256,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 findViewById(R.id.findBeacon).setVisibility(View.INVISIBLE);
                 // }
                 break;
+                //TODO the switch between visibilities does not work here help !
             case R.id.exitButton:
-                findViewById(R.id.mapView).setVisibility(View.INVISIBLE);
-                findViewById(R.id.exitButton).setVisibility(View.INVISIBLE);
-                getFind_bike.findViewById(R.id.Phrases).setVisibility(View.INVISIBLE);
                 buttons.setVisibility(View.VISIBLE);
-                buttons.bringToFront();
+                getFind_bike.findViewById(R.id.Phrases).setVisibility(View.INVISIBLE);
+                findViewById(R.id.map).setVisibility(View.INVISIBLE);
                 System.out.println("does this work !!");
             case R.id.findBike:
                 getFind_bike.setVisibility(View.VISIBLE);
@@ -270,6 +270,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.previousButton:
                 getFind_beacon.setVisibility(View.INVISIBLE);
                 buttons.setVisibility(View.VISIBLE);
+                break;
             default:
                 System.out.println("Entered default");
                 break;

@@ -9,64 +9,112 @@
     tools:context=".MainScreen">
 
     <include
-        android:id="@+id/includeMain_Screen"
-        layout="@layout/fragment_first"
-        android:visibility="gone" />
+        android:id="@+id/includeFind_beacon"
+        layout="@layout/find_beacon"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <include
-        android:id="@+id/includeLogin_main"
+        android:id="@+id/includeFind_bike"
         layout="@layout/find_bike"
-        android:visibility="gone" />
-
-    <ImageButton
-        android:id="@+id/findBike"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="85dp"
-        android:layout_marginTop="584dp"
-        android:layout_marginEnd="86dp"
-        android:layout_marginBottom="79dp"
-        android:background="@android:color/transparent"
-        android:src="@drawable/find1"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/findBeacon"
-        android:layout_width="265dp"
-        android:layout_height="84dp"
-        android:layout_marginStart="73dp"
-        android:layout_marginTop="574dp"
-        android:layout_marginEnd="73dp"
-        android:layout_marginBottom="73dp"
-        android:background="@android:color/transparent"
-        android:src="@drawable/findbeacon"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/differentButtons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/mapView"
-            android:layout_width="413dp"
-            android:layout_height="501dp"
-            android:contentDescription="@string/app_name"
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="457dp"
+            android:layout_height="772dp"
+            android:src="@drawable/b3"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"></com.google.android.gms.maps.MapView>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.512"
+            tools:ignore="MissingConstraints" />
 
         <ImageButton
-            android:id="@+id/imageButton2"
+            android:id="@+id/findBike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="85dp"
+            android:layout_marginTop="584dp"
+            android:layout_marginEnd="86dp"
+            android:layout_marginBottom="79dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/find1"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/findBeacon"
+            android:layout_width="265dp"
+            android:layout_height="84dp"
+            android:layout_marginStart="73dp"
+            android:layout_marginTop="574dp"
+            android:layout_marginEnd="73dp"
+            android:layout_marginBottom="73dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/findbeacon"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="230dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <fragment
+            android:id="@+id/mapView"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="415dp"
+            android:layout_height="503dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/mapThing"
+                android:layout_width="413dp"
+                android:layout_height="501dp"
+                android:contentDescription="@string/app_name"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </fragment>
+
+        <ImageButton
+            android:id="@+id/exitButton"
             android:layout_width="70dp"
             android:layout_height="59dp"
             android:layout_marginStart="18dp"
@@ -81,98 +129,4 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <ImageView
-        android:id="@+id/imageView9"
-        android:layout_width="103dp"
-        android:layout_height="67dp"
-        android:src="@drawable/turtle2"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="620dp" />
-
-    <ImageView
-        android:id="@+id/phrase1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="103dp"
-        android:layout_marginTop="549dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="119dp"
-        android:src="@drawable/phrase1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/phrase2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="103dp"
-        android:layout_marginTop="549dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="119dp"
-        android:src="@drawable/phrase2"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/phrase3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="103dp"
-        android:layout_marginTop="549dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="119dp"
-        android:src="@drawable/phrase3"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/phrase4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="103dp"
-        android:layout_marginTop="549dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="119dp"
-        android:src="@drawable/phrase4"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/phrase5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="103dp"
-        android:layout_marginTop="549dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="119dp"
-        android:src="@drawable/phrase5"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/phrase6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="103dp"
-        android:layout_marginTop="549dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="119dp"
-        android:src="@drawable/phrase6"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

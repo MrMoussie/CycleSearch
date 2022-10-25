@@ -2,8 +2,8 @@ package com.example.cyclesearch;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.FragmentManager;
+import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.fragment.app.Fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -13,11 +13,13 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Layout;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RadioGroup;
+import android.widget.ImageButton;
+import android.widget.ListView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,7 +38,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
@@ -48,14 +49,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private FileWriter outputfile;
     private CSVWriter writer;
     private SupportMapFragment mapFragment;
-    private Button button1;
-    private Button button2;
-    private Button button3;
-    private ConstraintLayout frame2;
+    private ListView listView;
+    private ImageButton findBike;
+    private ImageButton findBeacon;
+    private ImageButton exitToMain;
+    private View getFind_beacon;
+    private View getFind_bike;
+    private View buttons;
+    private View map;
     private SensorEventListener sensorListener;
     private SensorActivity sensorActivity;
-    private boolean init = false;
-    private Excel excel;
+    private View find_beacon;
+    private View find_bike;
+    private ArrayAdapter arrayAdapter;
+    private AppCompatImageButton previousButton;
+    private ArrayList macList = new ArrayList();
 
     /**
      * Initial method of the application, invoked on the start. Contains all of the initializers for the buttons, views, layouts and map
@@ -67,8 +75,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.main_screen);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        findBike = findViewById(R.id.findBike);
+        findBike.setOnClickListener(this);
+        findBeacon = findViewById(R.id.findBeacon);
+        findBeacon.setOnClickListener(this);
+        exitToMain = findViewById(R.id.exitButton);
+        exitToMain.setOnClickListener(this);
 
-        frame2 = findViewById(R.id.ConstraintLayout);
+        getFind_beacon = findViewById(R.id.includeFind_beacon);
+        getFind_bike = findViewById(R.id.includeFind_bike);
+        buttons = findViewById(R.id.differentButtons);
+        map = findViewById(R.id.map);
+
+        find_beacon = findViewById(R.id.includeFind_beacon);
+        previousButton = find_beacon.findViewById(R.id.previousButton);
+        previousButton.setOnClickListener(this);
+
+        listView = find_beacon.findViewById(R.id.listView);
+        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, macList);
+        listView.setAdapter(arrayAdapter);
+
+        SupportMapFragment mapFragment = (SupportMapFragment)
+                getSupportFragmentManager().findFragmentById(R.id.mapView);
+        mapFragment.getMapAsync(this);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
@@ -112,10 +141,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mySensor = new MySensor();
             sensorListener = new SensorActivity(mySensor, writer);
             sensorActivity = (SensorActivity) sensorListener;
-            excel = sensorActivity.getExcel();
+            Excel excel = sensorActivity.getExcel();
             sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 200000);
             sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),200000);
-            init = true;
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -160,57 +188,39 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
+    /**
+     * Method used to monitor whether one of the buttons was clicked.
+     * @param view object that allows to control the view of the layout
+     */
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch(view.getId()) {
-            // Button used to switch between the main page, and the measurement/map page
-            case R.id.button2:
-                FragmentManager fm = getSupportFragmentManager();
-                mapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapView);
-                frame2 = findViewById(R.id.ConstraintLayout);
-                if (mapFragment == null) {
-                    mapFragment = SupportMapFragment.newInstance();
-                    fm.beginTransaction().replace(R.id.mapView, mapFragment).commit();
-                    mapFragment.getMapAsync(new MapsActivity());
-                } else {
-                    findViewById(R.id.includeMain).setVisibility(View.GONE);
-                    frame2.setVisibility(View.VISIBLE);
-                }
+            case R.id.findBeacon:
+                getFind_beacon.setVisibility(View.VISIBLE);
+                buttons.setVisibility(View.INVISIBLE);
+                // if (beaconIsSet == true) {
+                findViewById(R.id.findBeacon).setVisibility(View.INVISIBLE);
+                // }
                 break;
-            // Button used to switch between the measurement page, and the main page
-            case R.id.button_second:
-                button2 = findViewById(R.id.button_second);
-                button2.setOnClickListener(this);
-                findViewById(R.id.includeMain).setVisibility(View.VISIBLE);
-                frame2.setVisibility(View.GONE);
+            case R.id.exitButton:
+                findViewById(R.id.mapView).setVisibility(View.INVISIBLE);
+                findViewById(R.id.exitButton).setVisibility(View.INVISIBLE);
+                getFind_bike.findViewById(R.id.Phrases).setVisibility(View.INVISIBLE);
+                buttons.setVisibility(View.VISIBLE);
+                buttons.bringToFront();
+                System.out.println("does this work !!");
+            case R.id.findBike:
+                getFind_bike.setVisibility(View.VISIBLE);
+                map.setVisibility(View.VISIBLE);
+                buttons.setVisibility(View.INVISIBLE);
                 break;
+            case R.id.previousButton:
+                getFind_beacon.setVisibility(View.INVISIBLE);
+                buttons.setVisibility(View.VISIBLE);
             default:
                 System.out.println("Entered default");
-                System.exit(0);
                 break;
         }
     }
 }
-
-
-//        RadioGroup radioGroup =( findViewById(R.id.radioGroup));
-//        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-//            if(checkedId == R.id.bikingButton && mySensor != null){
-//                System.out.println("You are now biking");
-//                mySensor.setActivity("Biking");
-//            }
-//            else if(checkedId == R.id.walkingButton && mySensor != null){
-//                System.out.println("You are now walking");
-//                mySensor.setActivity("Walking");
-//            }
-//            else if(checkedId == R.id.standingButton && mySensor != null){
-//                System.out.println("You are standing");
-//                mySensor.setActivity("Standing");
-//            }
-//            else if(checkedId == R.id.sittingButton && mySensor != null){
-//                System.out.println("You are now sitting");
-//                mySensor.setActivity("Sitting");
-//            }
-//
-//        });

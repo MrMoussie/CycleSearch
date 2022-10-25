@@ -81,8 +81,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         Dexter.withContext(getApplicationContext())
                 .withPermissions(
-//                        Manifest.permission.BLUETOOTH_ADMIN,
-//                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.BLUETOOTH_ADMIN,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ).withListener(new MultiplePermissionsListener() {
@@ -90,7 +90,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
                         if (multiplePermissionsReport.areAllPermissionsGranted()) {
                             System.out.println("[SYSTEM] PERMISSION GRANTED!");
-                            System.out.println(Environment.getExternalStorageDirectory().getPath());
+                            bluetoothSetup();
                         }
                     }
 
@@ -106,7 +106,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     private void init() {
         try {
-            bluetoothSetup();
 
             // create FileWriter object with file as parameter
             outputfile = new FileWriter(file);

@@ -179,15 +179,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.beaconManager =  BeaconManager.getInstanceForApplication(this);
         this.beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout(IBEACON));
         this.beaconManager.addRangeNotifier((beacons, region) -> {
-            System.out.println("[ENTERED] with array size: " + currentBeacons.size());
-
-            System.out.println(currentBeacons);
-
             if (beacons.size() > 0) {
 
                 if (ESPMac == null) {
                     for (Beacon beacon : beacons) {
-                        if (!currentBeacons.contains(beacon.getBluetoothAddress())) currentBeacons.add(beacon.getBluetoothAddress());
+                        if (!currentBeacons.contains(beacon.getBluetoothAddress())) {
+                            currentBeacons.add(beacon.getBluetoothAddress());
+                            arrayAdapter.notifyDataSetChanged();
+                        }
                     }
                 } else {
                     for (Beacon beacon : beacons) {

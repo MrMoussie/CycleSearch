@@ -22,6 +22,7 @@ import android.text.Layout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -119,6 +120,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         previousButton.setOnClickListener(this);
 
         listView = find_beacon.findViewById(R.id.listView);
+        listView.setClickable(true);
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            System.out.println(parent);
+            System.out.println(view);
+            System.out.println(position);
+            System.out.println(id);
+        });
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new ArrayList<>()) {
             @NonNull
             @Override
@@ -158,11 +166,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         permissionToken.continuePermissionRequest();
                     }
                 }).check();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private ArrayList<String> getBeaconList() {
-        return (ArrayList<String>) currentBeacons.stream().map(Beacon::getBluetoothAddress).collect(Collectors.toList());
     }
 
     /**

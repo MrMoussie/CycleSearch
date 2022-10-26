@@ -82,6 +82,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -119,18 +121,19 @@
 
         <ImageButton
             android:id="@+id/exitButton"
-            android:layout_width="70dp"
-            android:layout_height="59dp"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="31dp"
-            android:layout_marginEnd="323dp"
-            android:layout_marginBottom="411dp"
+            android:layout_width="141dp"
+            android:layout_height="66dp"
+            android:layout_marginTop="143dp"
+            android:layout_marginEnd="270dp"
+            android:layout_marginBottom="522dp"
             android:background="@android:color/transparent"
-            android:src="@drawable/go_back_button"
+            android:src="@drawable/previous_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

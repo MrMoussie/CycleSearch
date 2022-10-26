@@ -31,9 +31,11 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -91,6 +93,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ArrayAdapter arrayAdapter;
     private AppCompatImageButton previousButton;
     private ArrayList macList = new ArrayList();
+    private static MapStyleOptions coldStyle;
+    private static MapStyleOptions warmStyle;
+    private static MapStyleOptions hotStyle;
 
     /**
      * Initial method of the application, invoked on the start. Contains all of the initializers for the buttons, views, layouts and map
@@ -102,6 +107,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_screen);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        coldStyle = MapStyleOptions.loadRawResourceStyle(this, R.raw.colder);
+        warmStyle = MapStyleOptions.loadRawResourceStyle(this, R.raw.warmer);
+        hotStyle = MapStyleOptions.loadRawResourceStyle(this, R.raw.hot);
 
         findBike = findViewById(R.id.findBike);
         findBike.setOnClickListener(this);
@@ -277,6 +286,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
+
+    public void setColdMap(GoogleMap map) { if (map != null && coldStyle != null) map.setMapStyle(coldStyle); }
+
+    public void setWarmMap(GoogleMap map) { if (map != null && warmStyle != null) map.setMapStyle(warmStyle); }
+
+    public void setHotMap(GoogleMap map) { if (map != null && hotStyle != null) map.setMapStyle(hotStyle); }
 
     /**
      * Method used to monitor whether one of the buttons was clicked.

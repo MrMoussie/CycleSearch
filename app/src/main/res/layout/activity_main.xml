@@ -15,19 +15,20 @@
     <include
         android:id="@+id/includeMain"
         layout="@layout/content_main"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <include
         android:id="@+id/includeMainScreen"
         layout="@layout/main_screen"
-        android:visibility="visible" />
+        android:visibility="gone" />
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ConstraintLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:visibility="gone">
+        android:visibility="visible" >
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"
@@ -40,10 +41,10 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"></com.google.android.gms.maps.MapView>
+            app:layout_constraintVertical_bias="1.0" />
 
         <Button
-            android:id="@+id/button_second"
+            android:id="@+id/button_cookie"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="69dp"
@@ -60,6 +61,7 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

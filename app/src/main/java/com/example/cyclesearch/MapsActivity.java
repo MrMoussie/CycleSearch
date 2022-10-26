@@ -65,6 +65,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ImageButton findBike;
     private ImageButton findBeacon;
     private ImageButton exitToMain;
+    private Button cookieButton;
     private View getFind_beacon;
     private View getFind_bike;
     private View buttons;
@@ -258,19 +259,44 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
                 //TODO the switch between visibilities does not work here help !
             case R.id.exitButton:
-                buttons.setVisibility(View.VISIBLE);
-                getFind_bike.findViewById(R.id.Phrases).setVisibility(View.INVISIBLE);
-                findViewById(R.id.map).setVisibility(View.INVISIBLE);
+
+                if(buttons.getVisibility() == View.INVISIBLE) {
+                    buttons.setVisibility(View.VISIBLE);
+                    findViewById(R.id.background_home).setVisibility(View.VISIBLE);
+                    getFind_bike.setVisibility(View.INVISIBLE);
+                    getFind_bike.findViewById(R.id.Phrases).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.mapView).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.exitButton).setVisibility(View.INVISIBLE);
+                }
+                //buttons.setVisibility(View.VISIBLE);
                 System.out.println("does this work !!");
+                break;
             case R.id.findBike:
-                getFind_bike.setVisibility(View.VISIBLE);
-                map.setVisibility(View.VISIBLE);
-                buttons.setVisibility(View.INVISIBLE);
+                if(getFind_bike.getVisibility() == View.INVISIBLE){
+                    getFind_bike.setVisibility(View.VISIBLE);
+                    map.setVisibility(View.VISIBLE);
+                    findViewById(R.id.mapView).setVisibility(View.VISIBLE);
+                    buttons.setVisibility(View.INVISIBLE);
+                    findViewById(R.id.background_home).setVisibility(View.INVISIBLE);
+
+                    getFind_bike.findViewById(R.id.Phrases).setVisibility(View.VISIBLE);
+                    findViewById(R.id.mapView).setVisibility(View.VISIBLE);
+                    findViewById(R.id.exitButton).setVisibility(View.VISIBLE);
+
+                /*} else if(buttons.getVisibility() == View.VISIBLE){
+                    buttons.setVisibility(View.INVISIBLE);
+                    findViewById(R.id.background_home).setVisibility(View.INVISIBLE);*/
+                }
+
                 break;
             case R.id.previousButton:
                 getFind_beacon.setVisibility(View.INVISIBLE);
                 buttons.setVisibility(View.VISIBLE);
                 break;
+
+           /* case R.id.button_cookie:
+                findViewById(R.id.includeCookieTest).setVisibility(View.INVISIBLE);
+                buttons.setVisibility(View.VISIBLE);*/
             default:
                 System.out.println("Entered default");
                 break;

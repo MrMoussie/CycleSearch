@@ -16,6 +16,9 @@
         <action
         android:id="@+id/mainScreen_to_findBike"
         app:destination="@id/findBike2" />
+        <action
+            android:id="@+id/action_mainScreen_to_mapthingy"
+            app:destination="@id/mapthingy" />
     </fragment>
     <fragment
         android:id="@+id/findBike2"
@@ -32,5 +35,10 @@
         app:destination="@id/mainScreen" />
 
     </fragment>
+    <fragment
+        android:id="@+id/mapthingy"
+        android:name="com.example.cyclesearch.Mapthingy"
+        android:label="fragment_mapthingy"
+        tools:layout="@layout/fragment_mapthingy" />
 
 </navigation>

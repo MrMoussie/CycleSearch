@@ -1,7 +1,6 @@
 package com.example.cyclesearch;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -13,7 +12,6 @@ import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Layout;
@@ -67,6 +65,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ImageButton findBike;
     private ImageButton findBeacon;
     private ImageButton exitToMain;
+    private Button cookieButton;
     private View getFind_beacon;
     private View getFind_bike;
     private View buttons;
@@ -75,7 +74,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private SensorActivity sensorActivity;
     private boolean init = false;
     private Excel excel;
-    private static Collection<Beacon> currentBeacons = new ArrayList<>();
+    private Collection<Beacon> currentBeacons;
     private View find_beacon;
     private View find_bike;
     private ArrayAdapter arrayAdapter;
@@ -86,7 +85,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      * Initial method of the application, invoked on the start. Contains all of the initializers for the buttons, views, layouts and map
      * @param savedInstanceState instance used for starting the application
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +108,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         previousButton.setOnClickListener(this);
 
         listView = find_beacon.findViewById(R.id.listView);
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, currentBeacons.toArray());
+        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, macList);
         listView.setAdapter(arrayAdapter);
 
         SupportMapFragment mapFragment = (SupportMapFragment)
@@ -173,11 +171,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.beaconManager =  BeaconManager.getInstanceForApplication(this);
         this.beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout(IBEACON));
         this.beaconManager.addRangeNotifier((beacons, region) -> {
-            System.out.println("[ENTERED] with array size: " + currentBeacons.size());
+            System.out.println("[ENTERED] with array size: " + beacons.size());
             if (beacons.size() > 0) {
 
-                if (ESPMac == null || ESPMac.equals("EC:62:60:B2:C1:46")) {
-                    currentBeacons.addAll(beacons);
+                if (ESPMac == null) {
+                    this.currentBeacons = beacons;
                 } else {
                     for (Beacon beacon : beacons) {
                         System.out.println("[SYSTEM] FOUND DEVICE WITH RSSI " + beacon.getRssi() + " WITH ADDRESS " + beacon.getBluetoothAddress()
@@ -259,23 +257,46 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 findViewById(R.id.findBeacon).setVisibility(View.INVISIBLE);
                 // }
                 break;
-            case R.id.exitButton: //TODO the switch between visibilities does not work here help !
-                buttons.setVisibility(View.VISIBLE);
-                findViewById(R.id.imageView5).setVisibility(View.VISIBLE);
-                getFind_bike.findViewById(R.id.Phrases).setVisibility(View.INVISIBLE);
-                map.setVisibility(View.INVISIBLE);
-                findViewById(R.id.exitButton).setVisibility(View.INVISIBLE);
-                findViewById(R.id.mapView).setVisibility(View.INVISIBLE);
+                //TODO the switch between visibilities does not work here help !
+            case R.id.exitButton:
+
+                if(buttons.getVisibility() == View.INVISIBLE) {
+                    buttons.setVisibility(View.VISIBLE);
+                    findViewById(R.id.background_home).setVisibility(View.VISIBLE);
+                    getFind_bike.setVisibility(View.INVISIBLE);
+                    getFind_bike.findViewById(R.id.Phrases).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.mapView).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.exitButton).setVisibility(View.INVISIBLE);
+                }
+                //buttons.setVisibility(View.VISIBLE);
                 System.out.println("does this work !!");
+                break;
             case R.id.findBike:
-                getFind_bike.setVisibility(View.VISIBLE);
-                map.setVisibility(View.VISIBLE);
-                buttons.setVisibility(View.INVISIBLE);
+                if(getFind_bike.getVisibility() == View.INVISIBLE){
+                    getFind_bike.setVisibility(View.VISIBLE);
+                    map.setVisibility(View.VISIBLE);
+                    findViewById(R.id.mapView).setVisibility(View.VISIBLE);
+                    buttons.setVisibility(View.INVISIBLE);
+                    findViewById(R.id.background_home).setVisibility(View.INVISIBLE);
+
+                    getFind_bike.findViewById(R.id.Phrases).setVisibility(View.VISIBLE);
+                    findViewById(R.id.mapView).setVisibility(View.VISIBLE);
+                    findViewById(R.id.exitButton).setVisibility(View.VISIBLE);
+
+                /*} else if(buttons.getVisibility() == View.VISIBLE){
+                    buttons.setVisibility(View.INVISIBLE);
+                    findViewById(R.id.background_home).setVisibility(View.INVISIBLE);*/
+                }
+
                 break;
             case R.id.previousButton:
                 getFind_beacon.setVisibility(View.INVISIBLE);
                 buttons.setVisibility(View.VISIBLE);
                 break;
+
+           /* case R.id.button_cookie:
+                findViewById(R.id.includeCookieTest).setVisibility(View.INVISIBLE);
+                buttons.setVisibility(View.VISIBLE);*/
             default:
                 System.out.println("Entered default");
                 break;

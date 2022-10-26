@@ -133,14 +133,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/distance"
+        <ImageView
+            android:id="@+id/loading_speech"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="103dp"
+            android:layout_marginTop="549dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="119dp"
+            android:src="@drawable/img_1"
             android:visibility="visible"
-            tools:layout_editor_absoluteX="207dp"
-            tools:layout_editor_absoluteY="640dp"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

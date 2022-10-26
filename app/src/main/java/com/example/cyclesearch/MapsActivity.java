@@ -131,6 +131,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         listView = find_beacon.findViewById(R.id.listView);
         listView.setClickable(true);
         listView.setOnItemClickListener((parent, view, position, id) -> {
+            findViewById(R.id.selectedTurtle).setVisibility(View.VISIBLE);
+            findViewById(R.id.selectedTurtle).setX(parent.getX() - 110);
+            findViewById(R.id.selectedTurtle).setY(parent.getY() + 20);
             // Set selected beacon
             String macAddress = parent.getItemAtPosition(position).toString().split(": ")[1].split(" ")[0];
             selectedBeacon = currentBeacons.stream().filter(x -> x.getBluetoothAddress().equals(macAddress)).collect(Collectors.toList()).get(0);
@@ -216,7 +219,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     for (Beacon beacon : beacons) {
                         if (!currentMacs.contains(beacon.getBluetoothAddress())) {
                             currentBeacons.add(beacon);
-                            arrayAdapter.add(beacon.getBluetoothName() + ": " + beacon.getBluetoothAddress() + " " + Math.round(beacon.getDistance() *100)/100);
+                            arrayAdapter.add(beacon.getBluetoothName() + ": " + beacon.getBluetoothAddress() + " \ndistance: " + Math.round(beacon.getDistance() * 100.0) / 100.0 + "m");
                         }
                         arrayAdapter.notifyDataSetChanged();
                     }
@@ -233,7 +236,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 clearTurtleText();
 
                                 if (RSSI < -85) {
-                                    // TODO change turtle text based on RSSI
                                     setColdMap(mMap);
 
                                     if (RSSI < -95) {
@@ -242,7 +244,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                         findViewById(R.id.phrase2).setVisibility(View.VISIBLE);
                                     }
                                 } else if (RSSI < -60) {
-                                    // TODO change turtle text based on RSSI
                                     setWarmMap(mMap);
 
                                     if (RSSI < -75) {
@@ -251,7 +252,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                         findViewById(R.id.phrase4).setVisibility(View.VISIBLE);
                                     }
                                 }  else {
-                                    // TODO change turtle text based on RSSI
                                     setHotMap(mMap);
 
                                     if (RSSI < -50) {
@@ -282,6 +282,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void clearTurtleText() {
+        findViewById(R.id.loading_speech).setVisibility(View.INVISIBLE);
         findViewById(R.id.phrase1).setVisibility(View.INVISIBLE);
         findViewById(R.id.phrase2).setVisibility(View.INVISIBLE);
         findViewById(R.id.phrase3).setVisibility(View.INVISIBLE);

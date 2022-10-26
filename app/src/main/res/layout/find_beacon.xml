@@ -20,15 +20,22 @@
         android:id="@+id/listView"
         android:layout_width="307dp"
         android:layout_height="460dp"
-        android:layout_marginStart="65dp"
-        android:layout_marginTop="123dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="105dp"
+        android:layout_marginStart="104dp"
+        android:layout_marginTop="145dp"
+        android:layout_marginBottom="126dp"
         android:background="@color/light_orange"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"></ListView>
+
+    <ImageView
+        android:id="@+id/selectedTurtle"
+        android:layout_width="49dp"
+        android:layout_height="34dp"
+        android:src="@drawable/turtle2"
+        android:visibility="gone"
+        tools:ignore="MissingConstraints" />
 
     <ImageButton
         android:id="@+id/previousButton"
@@ -49,10 +56,16 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="132dp"
+        android:layout_marginTop="110dp"
+        android:layout_marginEnd="115dp"
+        android:layout_marginBottom="594dp"
         android:text="Detected beacons"
         android:textSize="20sp"
         android:textStyle="bold"
-        tools:layout_editor_absoluteX="132dp"
-        tools:layout_editor_absoluteY="110dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

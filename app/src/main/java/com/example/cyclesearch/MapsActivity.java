@@ -132,7 +132,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         listView.setClickable(true);
         listView.setOnItemClickListener((parent, view, position, id) -> {
             // Set selected beacon
-            String macAddress = parent.getItemAtPosition(position).toString().split(": ")[1];
+            String macAddress = parent.getItemAtPosition(position).toString().split(": ")[1].split(" ")[0];
             selectedBeacon = currentBeacons.stream().filter(x -> x.getBluetoothAddress().equals(macAddress)).collect(Collectors.toList()).get(0);
         });
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new ArrayList<>()) {
@@ -216,7 +216,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     for (Beacon beacon : beacons) {
                         if (!currentMacs.contains(beacon.getBluetoothAddress())) {
                             currentBeacons.add(beacon);
-                            arrayAdapter.add(beacon.getBluetoothName() + ": " + beacon.getBluetoothAddress());
+                            arrayAdapter.add(beacon.getBluetoothName() + ": " + beacon.getBluetoothAddress() + " " + Math.round(beacon.getDistance() *100)/100);
                         }
                         arrayAdapter.notifyDataSetChanged();
                     }

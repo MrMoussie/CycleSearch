@@ -13,6 +13,6 @@
         android:id="@+id/imageView"
         android:layout_width="531dp"
         android:layout_height="900dp"
-        android:src="@drawable/img" />
+        android:src="@drawable/splashy" />
 
 </FrameLayout>

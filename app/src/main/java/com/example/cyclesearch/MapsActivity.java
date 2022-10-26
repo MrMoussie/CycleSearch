@@ -131,10 +131,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         listView = find_beacon.findViewById(R.id.listView);
         listView.setClickable(true);
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            System.out.println(parent);
-            System.out.println(view);
-            System.out.println(position);
-            System.out.println(id);
+            // Set selected beacon
+            String macAddress = parent.getItemAtPosition(position).toString().split(": ")[1];
+            selectedBeacon = currentBeacons.stream().filter(x -> x.getBluetoothAddress().equals(macAddress)).collect(Collectors.toList()).get(0);
         });
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new ArrayList<>()) {
             @NonNull
@@ -230,14 +229,47 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             //Found our beacon
                             double RSSI = beacon.getRssi();
                             if(prevRSSI != Double.NEGATIVE_INFINITY) {
-                                if (Math.abs(RSSI - prevRSSI) <= threshold) {
-                                    //no change
 
-                                } else if (RSSI - prevRSSI > threshold) {
-                                    //getting better
-                                } else {
-                                    //getting worse
+                                clearTurtleText();
+
+                                if (RSSI < -85) {
+                                    // TODO change turtle text based on RSSI
+                                    setColdMap(mMap);
+
+                                    if (RSSI < -95) {
+                                        findViewById(R.id.phrase1).setVisibility(View.VISIBLE);
+                                    } else {
+                                        findViewById(R.id.phrase2).setVisibility(View.VISIBLE);
+                                    }
+                                } else if (RSSI < -60) {
+                                    // TODO change turtle text based on RSSI
+                                    setWarmMap(mMap);
+
+                                    if (RSSI < -75) {
+                                        findViewById(R.id.phrase3).setVisibility(View.VISIBLE);
+                                    } else {
+                                        findViewById(R.id.phrase4).setVisibility(View.VISIBLE);
+                                    }
+                                }  else {
+                                    // TODO change turtle text based on RSSI
+                                    setHotMap(mMap);
+
+                                    if (RSSI < -50) {
+                                        findViewById(R.id.phrase5).setVisibility(View.VISIBLE);
+                                    } else {
+                                        findViewById(R.id.phrase6).setVisibility(View.VISIBLE);
+                                    }
                                 }
+
+//                                if (Math.abs(RSSI - prevRSSI) <= threshold) {
+//                                    //no change
+//
+//                                } else if (RSSI - prevRSSI > threshold) {
+//                                    //getting better
+//                                } else {
+//                                    //getting worse
+//
+//                                }
                             }
                             prevRSSI = RSSI;
                         }
@@ -247,6 +279,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         this.beaconManager.startRangingBeacons(new Region("myRangingUniqueId", null, null, null));
+    }
+
+    private void clearTurtleText() {
+        findViewById(R.id.phrase1).setVisibility(View.INVISIBLE);
+        findViewById(R.id.phrase2).setVisibility(View.INVISIBLE);
+        findViewById(R.id.phrase3).setVisibility(View.INVISIBLE);
+        findViewById(R.id.phrase4).setVisibility(View.INVISIBLE);
+        findViewById(R.id.phrase5).setVisibility(View.INVISIBLE);
+        findViewById(R.id.phrase6).setVisibility(View.INVISIBLE);
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.example.cyclesearch;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -12,6 +13,7 @@ import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Layout;
@@ -43,6 +45,8 @@ import org.altbeacon.beacon.Region;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Array;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +54,7 @@ import java.util.List;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
 
     private static final String IBEACON = "m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24";
-    private static String ESPMac = "EC:62:60:B2:C1:46";
+    private static String ESPMac;
     private double prevRSSI = Double.NEGATIVE_INFINITY;
     private double threshold = 5;
     private BeaconManager beaconManager;
@@ -74,7 +78,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private SensorActivity sensorActivity;
     private boolean init = false;
     private Excel excel;
-    private Collection<Beacon> currentBeacons;
+    private static final ArrayList<String> currentBeacons = new ArrayList<>();
+    private static Beacon ourBeacon;
     private View find_beacon;
     private View find_bike;
     private ArrayAdapter arrayAdapter;
@@ -85,6 +90,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      * Initial method of the application, invoked on the start. Contains all of the initializers for the buttons, views, layouts and map
      * @param savedInstanceState instance used for starting the application
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,7 +114,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         previousButton.setOnClickListener(this);
 
         listView = find_beacon.findViewById(R.id.listView);
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, macList);
+        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, currentBeacons);
         listView.setAdapter(arrayAdapter);
 
         SupportMapFragment mapFragment = (SupportMapFragment)
@@ -124,6 +130,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ).withListener(new MultiplePermissionsListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
                         if (multiplePermissionsReport.areAllPermissionsGranted()) {
@@ -167,19 +174,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void bluetoothSetup(){
         this.beaconManager =  BeaconManager.getInstanceForApplication(this);
         this.beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout(IBEACON));
         this.beaconManager.addRangeNotifier((beacons, region) -> {
-            System.out.println("[ENTERED] with array size: " + beacons.size());
+            System.out.println("[ENTERED] with array size: " + currentBeacons.size());
+
+            System.out.println(currentBeacons);
+
             if (beacons.size() > 0) {
 
                 if (ESPMac == null) {
-                    this.currentBeacons = beacons;
+                    for (Beacon beacon : beacons) {
+                        if (!currentBeacons.contains(beacon.getBluetoothAddress())) currentBeacons.add(beacon.getBluetoothAddress());
+                    }
                 } else {
                     for (Beacon beacon : beacons) {
                         System.out.println("[SYSTEM] FOUND DEVICE WITH RSSI " + beacon.getRssi() + " WITH ADDRESS " + beacon.getBluetoothAddress()
-                                + " WITH ID3 " + beacon.getId3() + " WITH NAME " + beacon.getBluetoothName());
+                                + " WITH DISTANCE " + beacon.getDistance() + " WITH NAME " + beacon.getBluetoothName());
                         if(beacon.getBluetoothAddress().equals(ESPMac)) {
                             System.out.println("[FOUND OUR BEACON]");
                             //Found our beacon

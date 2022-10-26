@@ -40,9 +40,9 @@
 
         <ImageView
             android:id="@+id/background_home"
-            android:layout_width="457dp"
-            android:layout_height="772dp"
-            android:src="@drawable/b3"
+            android:layout_width="466dp"
+            android:layout_height="819dp"
+            android:src="@drawable/background_home_2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

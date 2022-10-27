@@ -45,10 +45,14 @@ import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.Region;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.NoSuchFileException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -64,6 +68,7 @@ import weka.core.Instances;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
 
     private static final String IBEACON = "m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24";
+    private String selectedBeaconAddress;
     private double prevRSSI = Double.NEGATIVE_INFINITY;
     private double threshold = 5;
     private BeaconManager beaconManager;
@@ -102,7 +107,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private InputStream fileStream;
     private final ArrayList<String> previousValues = new ArrayList<>();
     private Queue queue;
-    private File addressFile = new File (Environment.getExternalStorageDirectory() + "/Downloads/address.txt");
+    private File addressFile = new File (Environment.getExternalStorageDirectory() + "/Download/address.txt");
 
     // FILES
     private final static String FILE_J48 = "treesJ48.model";
@@ -157,6 +162,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     FileWriter writer = new FileWriter(addressFile);
                     writer.write(selectedBeacon.getBluetoothAddress());
                     System.out.println("This the address that was saved: " + selectedBeacon.getBluetoothAddress());
+                    writer.flush();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -212,6 +218,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         try {
             initClassifier(FILE_J48);
             this.queue = new Queue();
+
+            System.out.println(this.file.exists());
+
+            if (this.file.exists()) {
+                try (BufferedReader reader = new BufferedReader(new FileReader(Environment.getExternalStorageDirectory() + "/Download/address.txt"))) {
+                    this.selectedBeaconAddress = reader.readLine();
+                    System.out.println("This is the address " + this.selectedBeaconAddress);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
             mySensor = new MySensor();
             sensorListener = new SensorActivity(mySensor, writer, this);

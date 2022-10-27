@@ -59,6 +59,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import weka.classifiers.Classifier;
@@ -68,7 +69,7 @@ import weka.core.Instances;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
 
     private static final String IBEACON = "m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24";
-    private String selectedBeaconAddress;
+    private static String selectedBeaconAddress;
     private double prevRSSI = Double.NEGATIVE_INFINITY;
     private double threshold = 5;
     private BeaconManager beaconManager;
@@ -107,7 +108,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private InputStream fileStream;
     private final ArrayList<String> previousValues = new ArrayList<>();
     private Queue queue;
-    private File addressFile = new File (Environment.getExternalStorageDirectory() + "/Download/address.txt");
+    private File addressFile = new File (Environment.getExternalStorageDirectory() + "/Download", "address.txt");
 
     // FILES
     private final static String FILE_J48 = "treesJ48.model";
@@ -155,8 +156,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             findViewById(R.id.selectedTurtle).setX(parent.getX() - 110);
             findViewById(R.id.selectedTurtle).setY(parent.getY() + 20);
             // Set selected beacon
-            String macAddress = parent.getItemAtPosition(position).toString().split(": ")[1].split(" ")[0];
-            selectedBeacon = currentBeacons.stream().filter(x -> x.getBluetoothAddress().equals(macAddress)).collect(Collectors.toList()).get(0);
+            selectedBeaconAddress = parent.getItemAtPosition(position).toString().split(": ")[1].split(" ")[0];
+            selectedBeacon = currentBeacons.stream().filter(x -> x.getBluetoothAddress().equals(selectedBeaconAddress)).collect(Collectors.toList()).get(0);
             if (addressFile.length() == 0 || !addressFile.exists()) {
                 try {
                     FileWriter writer = new FileWriter(addressFile);
@@ -219,12 +220,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             initClassifier(FILE_J48);
             this.queue = new Queue();
 
-            System.out.println(this.file.exists());
+            if (this.addressFile.exists()) {
+                try (Scanner scanner = new Scanner(this.addressFile)) {
+                    selectedBeaconAddress = scanner.nextLine();
 
-            if (this.file.exists()) {
-                try (BufferedReader reader = new BufferedReader(new FileReader(Environment.getExternalStorageDirectory() + "/Download/address.txt"))) {
-                    this.selectedBeaconAddress = reader.readLine();
-                    System.out.println("This is the address " + this.selectedBeaconAddress);
+                    if (selectedBeaconAddress != null) {
+                        getFind_beacon.setVisibility(View.INVISIBLE);
+                        buttons.setVisibility(View.VISIBLE);
+                        findViewById(R.id.findBeacon).setVisibility(View.INVISIBLE);
+                        findViewById(R.id.findBike).setVisibility(View.VISIBLE);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -289,8 +294,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.beaconManager =  BeaconManager.getInstanceForApplication(this);
         this.beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout(IBEACON));
         this.beaconManager.addRangeNotifier((beacons, region) -> {
+            System.out.println(selectedBeaconAddress);
+            System.out.println(beacons.size());
+
             if (beacons.size() > 0) {
-                if (selectedBeacon == null) {
+                if (selectedBeaconAddress == null) {
                     List<String> currentMacs = currentBeacons.stream().map(Beacon::getBluetoothAddress).collect(Collectors.toList());
                     for (Beacon beacon : beacons) {
                         if (!currentMacs.contains(beacon.getBluetoothAddress())) {
@@ -303,7 +311,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     for (Beacon beacon : beacons) {
                         System.out.println("[SYSTEM] FOUND DEVICE WITH RSSI " + beacon.getRssi() + " WITH ADDRESS " + beacon.getBluetoothAddress()
                                 + " WITH DISTANCE " + beacon.getDistance() + " WITH NAME " + beacon.getBluetoothName());
-                        if(beacon.getBluetoothAddress().equals(selectedBeacon.getBluetoothAddress())) {
+                        if(beacon.getBluetoothAddress().equals(selectedBeaconAddress)) {
                             System.out.println("[FOUND OUR BEACON]");
                             //Found our beacon
                             double RSSI = beacon.getRssi();

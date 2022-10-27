@@ -49,6 +49,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.NoSuchFileException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -101,6 +102,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private InputStream fileStream;
     private final ArrayList<String> previousValues = new ArrayList<>();
     private Queue queue;
+    private File addressFile = new File (Environment.getExternalStorageDirectory() + "/Downloads/address.txt");
 
     // FILES
     private final static String FILE_J48 = "treesJ48.model";
@@ -129,7 +131,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mContext = getApplicationContext();
         powerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
-        final PowerManager.WakeLock wakeLock =  powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"motionDetection:keepAwake");
+        final PowerManager.WakeLock wakeLock =  powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"cyclesearch:keepAwake");
         wakeLock.acquire();
 
         getFind_beacon = findViewById(R.id.includeFind_beacon);
@@ -150,6 +152,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             // Set selected beacon
             String macAddress = parent.getItemAtPosition(position).toString().split(": ")[1].split(" ")[0];
             selectedBeacon = currentBeacons.stream().filter(x -> x.getBluetoothAddress().equals(macAddress)).collect(Collectors.toList()).get(0);
+            if (addressFile.length() == 0 || !addressFile.exists()) {
+                try {
+                    FileWriter writer = new FileWriter(addressFile);
+                    writer.write(selectedBeacon.getBluetoothAddress());
+                    System.out.println("This the address that was saved: " + selectedBeacon.getBluetoothAddress());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
         });
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new ArrayList<>()) {
             @NonNull
@@ -284,7 +296,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                                 if (RSSI < -85) {
                                     setColdMap(mMap);
-
                                     if (RSSI < -95) {
                                         findViewById(R.id.phrase1).setVisibility(View.VISIBLE);
                                     } else {
@@ -411,6 +422,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 buttons.setVisibility(View.VISIBLE);
                 if (selectedBeacon != null) {
                     findViewById(R.id.findBeacon).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.findBike).setVisibility(View.VISIBLE);
                 }
                 break;
             default:

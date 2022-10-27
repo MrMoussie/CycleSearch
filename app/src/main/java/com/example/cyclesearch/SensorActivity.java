@@ -14,14 +14,16 @@ public class SensorActivity implements SensorEventListener {
 
     int accCounter = 0;
     int gyroCounter = 0;
-    int counterThreshold = 10;
+    int counterThreshold = 5;
 
     private final Excel excel;
+    private MapsActivity main;
 
-    public SensorActivity(MySensor sensor, CSVWriter writer) {
+    public SensorActivity(MySensor sensor, CSVWriter writer, MapsActivity main) {
         this.sensor = sensor;
         Mysensor = sensor;
         excel = new Excel(writer);
+        this.main = main;
     }
     /**
      * Method that is invoked each time a new sensor measurement is taken
@@ -38,39 +40,21 @@ public class SensorActivity implements SensorEventListener {
                 ArrayList<Float> acc = new ArrayList<>();
                 for (int i = 0; i < 3; i++) {
                     acc.add(sensorEvent.values[i]);
-                    if (i == 0) {
-                        System.out.println("[Accelerometer value X]: " + sensorEvent.values[i]);
-                    } else if (i == 1) {
-                        System.out.println("[Accelerometer value Y]: " + sensorEvent.values[i]);
-                    } else {
-                        System.out.println("[Accelerometer value Z]: " + sensorEvent.values[i]);
-                    }
                 }
 
-                accCounter++;
-                if (accCounter > counterThreshold) {
-                    this.sensor.setAcc(acc);
-                    this.sensor.setTimestamp(sensorEvent.timestamp);
-                }
+                this.sensor.setAcc(acc);
+                this.sensor.setTimestamp(sensorEvent.timestamp);
+                this.main.update();
                 break;
 
             case Sensor.TYPE_GYROSCOPE:
                 ArrayList<Float> gyro = new ArrayList<>();
                 for (int i = 0; i < 3; i++) {
                     gyro.add(sensorEvent.values[i]);
-                    if (i == 0) {
-                        System.out.println("[Accelerometer value X]: " + sensorEvent.values[i]);
-                    } else if (i == 1) {
-                        System.out.println("[Accelerometer value Y]: " + sensorEvent.values[i]);
-                    } else {
-                        System.out.println("[Accelerometer value Z]: " + sensorEvent.values[i]);
-                    }
                 }
-                gyroCounter++;
-                if (gyroCounter > counterThreshold) {
-                    this.sensor.setGyro(gyro);
-                    this.sensor.setTimestamp(sensorEvent.timestamp);
-                }
+
+                this.sensor.setGyro(gyro);
+                this.sensor.setTimestamp(sensorEvent.timestamp);
                 break;
             default:
                 System.out.println("Invalid sensor type in class SensorActivity, method onSensorChanged");

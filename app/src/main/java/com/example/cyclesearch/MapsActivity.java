@@ -5,8 +5,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -19,11 +17,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.PowerManager;
-import android.text.Layout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -32,7 +28,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -53,13 +48,17 @@ import org.altbeacon.beacon.Region;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Array;
-import java.util.Arrays;
-import java.util.Collection;
+import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
+
+import weka.classifiers.Classifier;
+import weka.core.DenseInstance;
+import weka.core.Instances;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
 
@@ -98,7 +97,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static MapStyleOptions hotStyle;
     private Context mContext;
     private PowerManager powerManager;
+    private Classifier cls;
+    private InputStream fileStream;
+    private final ArrayList<String> previousValues = new ArrayList<>();
+    private Queue queue;
 
+    // FILES
+    private final static String FILE_J48 = "treesJ48.model";
 
     /**
      * Initial method of the application, invoked on the start. Contains all of the initializers for the buttons, views, layouts and map
@@ -170,8 +175,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         Manifest.permission.BLUETOOTH_ADMIN,
                         Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ).withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
@@ -193,11 +197,62 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      * Method used for initializing the main components of the system: CSV writer & Sensors
      */
     private void init() {
-        mySensor = new MySensor();
-        sensorListener = new SensorActivity(mySensor, writer);
-        sensorActivity = (SensorActivity) sensorListener;
-        sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 200000);
-        sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),200000);
+        try {
+            initClassifier(FILE_J48);
+            this.queue = new Queue();
+
+            mySensor = new MySensor();
+            sensorListener = new SensorActivity(mySensor, writer, this);
+            sensorActivity = (SensorActivity) sensorListener;
+            sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 200000);
+            sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),200000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * This function closes the input file streams
+     * @throws IOException
+     */
+    private void closeStream() throws IOException {
+        if (this.fileStream != null) this.fileStream.close();
+    }
+
+    /**
+     * This function is called to update the user activity.
+     * This function adds the activity to the queue and tallies the queue when it is ready for the final decision on the user activity.
+     */
+    public void update() {
+        this.queue.addToQueue(this.getActivityRightPocket());
+        if (this.queue.isReady()) {
+            Attribute activity = this.queue.tallyQueue();
+
+            if (previousValues.size() > 0 && previousValues.get(0).contains(activity.toString())) return;
+
+            // Get current timestamp
+            Date date = new Date(System.currentTimeMillis());
+            @SuppressLint("SimpleDateFormat") DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+            String dateFormatted = formatter.format(date);
+
+            // Add
+            previousValues.add(0, dateFormatted + ' ' + this.queue.tallyQueue().toString());
+            this.arrayAdapter.notifyDataSetChanged();
+
+            // DEVELOPER DEBUG PURPOSE
+            System.out.println("[SYSTEM] Activity detected: " + this.queue.tallyQueue());
+        }
+    }
+
+    /**
+     * This function initializes the classifier of the model from the file.
+     * @param file file name to be used, from the assets folder
+     * @throws Exception
+     */
+    private void initClassifier(String file) throws Exception {
+        this.fileStream = getAssets().open(file);
+        this.cls = (Classifier) weka.core.SerializationHelper
+                .read(this.fileStream);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -363,4 +418,75 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
         }
     }
+
+    /**
+     * This function uses the model and the sensor data to predict the activity of the user.
+     * @return Attribute with the activity of the user
+     */
+    private Attribute getActivityRightPocket() {
+        if (!this.mySensor.isReady()) return null;
+
+        // Attributes for the prediction model
+        // Right pocket
+        final weka.core.Attribute attributeRightPocketAx = new weka.core.Attribute(Attribute.RIGHT_POCKET_AX.toString());
+        final weka.core.Attribute attributeRightPocketAy = new weka.core.Attribute(Attribute.RIGHT_POCKET_AY.toString());
+        final weka.core.Attribute attributeRightPocketAz = new weka.core.Attribute(Attribute.RIGHT_POCKET_AZ.toString());
+        final weka.core.Attribute attributeRightPocketGx = new weka.core.Attribute(Attribute.RIGHT_POCKET_GX.toString());
+        final weka.core.Attribute attributeRightPocketGy = new weka.core.Attribute(Attribute.RIGHT_POCKET_GY.toString());
+        final weka.core.Attribute attributeRightPocketGz = new weka.core.Attribute(Attribute.RIGHT_POCKET_GZ.toString());
+
+        final List<String> classes = new ArrayList<String>() {
+            {
+                add(Attribute.WALKING.toString());
+                add(Attribute.STANDING.toString());
+                add(Attribute.SITTING.toString());
+                add(Attribute.BIKING.toString());
+            }
+        };
+
+        // Instances(...) requires ArrayList<> instead of List<>...
+        ArrayList<weka.core.Attribute> attributeListRightPocket = new ArrayList<weka.core.Attribute>(2) {
+            {
+                add(attributeRightPocketAx);
+                add(attributeRightPocketAy);
+                add(attributeRightPocketAz);
+                add(attributeRightPocketGx);
+                add(attributeRightPocketGy);
+                add(attributeRightPocketGz);
+                weka.core.Attribute attributeClass = new weka.core.Attribute("@@class@@", classes);
+                add(attributeClass);
+            }
+        };
+
+        // unpredicted data sets (reference to sample structure for new instances)
+        Instances dataUnpredicted = new Instances("TestInstances",
+                attributeListRightPocket, 1);
+        // last feature is target variable
+        dataUnpredicted.setClassIndex(dataUnpredicted.numAttributes() - 1);
+
+        DenseInstance instanceRightPocket = new DenseInstance(dataUnpredicted.numAttributes()) {
+            {
+                setValue(attributeRightPocketAx, mySensor.getAcc().get(0));
+                setValue(attributeRightPocketAy, mySensor.getAcc().get(1));
+                setValue(attributeRightPocketAz, mySensor.getAcc().get(2));
+                setValue(attributeRightPocketGx, mySensor.getGyro().get(0));
+                setValue(attributeRightPocketGy, mySensor.getGyro().get(1));
+                setValue(attributeRightPocketGz, mySensor.getGyro().get(2));
+            }
+        };
+
+        // instance to use in prediction
+        instanceRightPocket.setDataset(dataUnpredicted);
+
+        // predict new sample
+        try {
+            double result = cls.classifyInstance(instanceRightPocket);
+            return Attribute.valueOf(classes.get(Double.valueOf(result).intValue()).toUpperCase());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 }

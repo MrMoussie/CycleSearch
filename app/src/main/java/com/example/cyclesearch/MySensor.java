@@ -53,13 +53,8 @@ public class MySensor {
      * Method that checks whether both Accelerometer and Gyrometer have acquired data to be sent to CSV file
      * @return boolean that determines whether both Gyro and Acc have data to send
      */
-    public boolean checkReady(){
-        if(accReady&&gyroReady){
-            accReady = false;
-            gyroReady = false;
-            return true;
-        }
-        return false;
+    public boolean isReady(){
+        return this.Acc.size() == 3 && this.Gyro.size() == 3;
     }
 
 

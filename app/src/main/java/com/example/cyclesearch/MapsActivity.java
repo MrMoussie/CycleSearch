@@ -230,6 +230,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     if (selectedBeaconAddress != null) {
                         getFind_beacon.setVisibility(View.INVISIBLE);
                         buttons.setVisibility(View.VISIBLE);
+                        reset.setVisibility(View.VISIBLE);
                         findViewById(R.id.findBeacon).setVisibility(View.INVISIBLE);
                         findViewById(R.id.findBike).setVisibility(View.VISIBLE);
                     }

@@ -76,7 +76,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private SensorManager sensorManager;
     private MySensor mySensor;
-    private File file = new File( Environment.getExternalStorageDirectory().getPath() + "/Documents/test.csv");
+//    private File file = new File( Environment.getExternalStorageDirectory().getPath() + "/Documents/test.csv");
     private FileWriter outputfile;
     private CSVWriter writer;
     private SupportMapFragment mapFragment;
@@ -102,6 +102,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static MapStyleOptions coldStyle;
     private static MapStyleOptions warmStyle;
     private static MapStyleOptions hotStyle;
+    private ImageButton reset;
     private Context mContext;
     private PowerManager powerManager;
     private Classifier cls;
@@ -134,6 +135,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         findBeacon.setOnClickListener(this);
         exitToMain = findViewById(R.id.exitButton);
         exitToMain.setOnClickListener(this);
+        reset = findViewById(R.id.resetButton);
+        reset.setOnClickListener(this);
 
         mContext = getApplicationContext();
         powerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
@@ -426,6 +429,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     findViewById(R.id.exitButton).setVisibility(View.INVISIBLE);
                 }
                 break;
+            case R.id.resetButton:
+                if (findViewById(R.id.findBeacon).getVisibility() == View.INVISIBLE) {
+                    findViewById(R.id.findBeacon).setVisibility(View.VISIBLE);
+                    selectedBeacon = null;
+                    if (addressFile.exists()) {
+                        addressFile.delete();
+                    }
+                }
+                break;
             case R.id.findBike:
                 if(getFind_bike.getVisibility() == View.INVISIBLE){
                     getFind_bike.setVisibility(View.VISIBLE);
@@ -445,6 +457,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (selectedBeacon != null) {
                     findViewById(R.id.findBeacon).setVisibility(View.INVISIBLE);
                     findViewById(R.id.findBike).setVisibility(View.VISIBLE);
+                    findViewById(R.id.resetButton).setVisibility(View.VISIBLE);
                 }
                 break;
             default:

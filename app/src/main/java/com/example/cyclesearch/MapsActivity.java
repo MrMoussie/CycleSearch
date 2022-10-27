@@ -294,9 +294,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.beaconManager =  BeaconManager.getInstanceForApplication(this);
         this.beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout(IBEACON));
         this.beaconManager.addRangeNotifier((beacons, region) -> {
-            System.out.println(selectedBeaconAddress);
-            System.out.println(beacons.size());
-
             if (beacons.size() > 0) {
                 if (selectedBeaconAddress == null) {
                     List<String> currentMacs = currentBeacons.stream().map(Beacon::getBluetoothAddress).collect(Collectors.toList());

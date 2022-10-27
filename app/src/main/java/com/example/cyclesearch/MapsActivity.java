@@ -18,6 +18,7 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.PowerManager;
 import android.text.Layout;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +85,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private View map;
     private SensorEventListener sensorListener;
     private SensorActivity sensorActivity;
-    private boolean init = false;
     private Excel excel;
     private static final ArrayList<Beacon> currentBeacons = new ArrayList<>();
     private static Beacon selectedBeacon;
@@ -96,6 +96,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static MapStyleOptions coldStyle;
     private static MapStyleOptions warmStyle;
     private static MapStyleOptions hotStyle;
+    private Context mContext;
+    private PowerManager powerManager;
+
 
     /**
      * Initial method of the application, invoked on the start. Contains all of the initializers for the buttons, views, layouts and map
@@ -118,6 +121,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         findBeacon.setOnClickListener(this);
         exitToMain = findViewById(R.id.exitButton);
         exitToMain.setOnClickListener(this);
+
+        mContext = getApplicationContext();
+        powerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+        final PowerManager.WakeLock wakeLock =  powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"motionDetection:keepAwake");
+        wakeLock.acquire();
 
         getFind_beacon = findViewById(R.id.includeFind_beacon);
         getFind_bike = findViewById(R.id.includeFind_bike);
@@ -162,12 +170,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         Manifest.permission.BLUETOOTH_ADMIN,
                         Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_BACKGROUND_LOCATION
                 ).withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
                         if (multiplePermissionsReport.areAllPermissionsGranted()) {
                             System.out.println("[SYSTEM] PERMISSION GRANTED!");
+                            init();
                             bluetoothSetup();
                         }
                     }
@@ -183,28 +193,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      * Method used for initializing the main components of the system: CSV writer & Sensors
      */
     private void init() {
-        try {
-            // create FileWriter object with file as parameter
-            outputfile = new FileWriter(file);
-
-            // create CSVWriter object filewriter object as parameter
-            writer = new CSVWriter(outputfile);
-
-            // adding header to csv
-            String[] header = { "AccX", "AccY", "AccZ", "GyroX", "GyroY", "GyroZ", "Timestamp", "Activity" };
-            writer.writeNext(header);
-
-            mySensor = new MySensor();
-            sensorListener = new SensorActivity(mySensor, writer);
-            sensorActivity = (SensorActivity) sensorListener;
-            excel = sensorActivity.getExcel();
-            sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 200000);
-            sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),200000);
-            init = true;
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        mySensor = new MySensor();
+        sensorListener = new SensorActivity(mySensor, writer);
+        sensorActivity = (SensorActivity) sensorListener;
+        sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 200000);
+        sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),200000);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -213,7 +206,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout(IBEACON));
         this.beaconManager.addRangeNotifier((beacons, region) -> {
             if (beacons.size() > 0) {
-
                 if (selectedBeacon == null) {
                     List<String> currentMacs = currentBeacons.stream().map(Beacon::getBluetoothAddress).collect(Collectors.toList());
                     for (Beacon beacon : beacons) {
@@ -260,16 +252,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                         findViewById(R.id.phrase6).setVisibility(View.VISIBLE);
                                     }
                                 }
-
-//                                if (Math.abs(RSSI - prevRSSI) <= threshold) {
-//                                    //no change
-//
-//                                } else if (RSSI - prevRSSI > threshold) {
-//                                    //getting better
-//                                } else {
-//                                    //getting worse
-//
-//                                }
                             }
                             prevRSSI = RSSI;
                         }
@@ -305,7 +287,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void sensorOFF() {
         sensorManager.unregisterListener(sensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
         sensorManager.unregisterListener(sensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE));
-
         if (sensorActivity != null) {
             sensorActivity.resetAccCounter();
             sensorActivity.resetGyroCounter();
@@ -346,13 +327,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.findBeacon:
                 getFind_beacon.setVisibility(View.VISIBLE);
                 buttons.setVisibility(View.INVISIBLE);
-                // if (beaconIsSet == true) {
-                findViewById(R.id.findBeacon).setVisibility(View.INVISIBLE);
-                // }
                 break;
-                //TODO the switch between visibilities does not work here help !
             case R.id.exitButton:
-
                 if(buttons.getVisibility() == View.INVISIBLE) {
                     buttons.setVisibility(View.VISIBLE);
                     findViewById(R.id.background_home).setVisibility(View.VISIBLE);
@@ -361,8 +337,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     findViewById(R.id.mapView).setVisibility(View.INVISIBLE);
                     findViewById(R.id.exitButton).setVisibility(View.INVISIBLE);
                 }
-                //buttons.setVisibility(View.VISIBLE);
-                System.out.println("does this work !!");
                 break;
             case R.id.findBike:
                 if(getFind_bike.getVisibility() == View.INVISIBLE){
@@ -375,21 +349,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     getFind_bike.findViewById(R.id.Phrases).setVisibility(View.VISIBLE);
                     findViewById(R.id.mapView).setVisibility(View.VISIBLE);
                     findViewById(R.id.exitButton).setVisibility(View.VISIBLE);
-
-                /*} else if(buttons.getVisibility() == View.VISIBLE){
-                    buttons.setVisibility(View.INVISIBLE);
-                    findViewById(R.id.background_home).setVisibility(View.INVISIBLE);*/
                 }
-
                 break;
             case R.id.previousButton:
                 getFind_beacon.setVisibility(View.INVISIBLE);
                 buttons.setVisibility(View.VISIBLE);
+                if (selectedBeacon != null) {
+                    findViewById(R.id.findBeacon).setVisibility(View.INVISIBLE);
+                }
                 break;
-
-           /* case R.id.button_cookie:
-                findViewById(R.id.includeCookieTest).setVisibility(View.INVISIBLE);
-                buttons.setVisibility(View.VISIBLE);*/
             default:
                 System.out.println("Entered default");
                 break;

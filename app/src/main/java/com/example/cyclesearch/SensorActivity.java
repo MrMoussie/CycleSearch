@@ -77,9 +77,9 @@ public class SensorActivity implements SensorEventListener {
                 break;
         }
 
-        if (this.sensor.checkReady()) {
-            excel.writeData(this.sensor.getAcc(), this.sensor.getGyro(), this.sensor.getTimestamp(), Mysensor.getActivity());
-        }
+//        if (this.sensor.checkReady()) {
+//            excel.writeData(this.sensor.getAcc(), this.sensor.getGyro(), this.sensor.getTimestamp(), Mysensor.getActivity());
+//        }
     }
 
     public Excel getExcel() {

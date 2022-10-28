@@ -13,6 +13,9 @@ import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -45,15 +48,10 @@ import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.Region;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.file.NoSuchFileException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -66,7 +64,7 @@ import weka.classifiers.Classifier;
 import weka.core.DenseInstance;
 import weka.core.Instances;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener, LocationListener {
 
     private static final String IBEACON = "m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24";
     private static String selectedBeaconAddress;
@@ -110,6 +108,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final ArrayList<String> previousValues = new ArrayList<>();
     private Queue queue;
     private File addressFile = new File (Environment.getExternalStorageDirectory() + "/Download", "address.txt");
+    private LocationManager locationManager;
+    private LatLng location;
+    private static final int ZOOM = 15;
+
+    private Attribute lastActivity;
+
+    private boolean isHot = false;
 
     // FILES
     private final static String FILE_J48 = "treesJ48.model";
@@ -142,6 +147,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         powerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
         final PowerManager.WakeLock wakeLock =  powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"cyclesearch:keepAwake");
         wakeLock.acquire();
+
+        this.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         getFind_beacon = findViewById(R.id.includeFind_beacon);
         getFind_bike = findViewById(R.id.includeFind_bike);
@@ -196,6 +203,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .withPermissions(
                         Manifest.permission.BLUETOOTH_ADMIN,
                         Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ).withListener(new MultiplePermissionsListener() {
@@ -218,10 +226,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     /**
      * Method used for initializing the main components of the system: CSV writer & Sensors
      */
+    @SuppressLint("MissingPermission")
     private void init() {
         try {
             initClassifier(FILE_J48);
             this.queue = new Queue();
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 10, this);
+
 
             if (this.addressFile.exists()) {
                 try (Scanner scanner = new Scanner(this.addressFile)) {
@@ -276,6 +287,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             // Add
             previousValues.add(0, dateFormatted + ' ' + this.queue.tallyQueue().toString());
             this.arrayAdapter.notifyDataSetChanged();
+
+            if (this.location != null) {
+                if (this.lastActivity == Attribute.BIKING && activity != Attribute.BIKING) this.mMap.addMarker(new MarkerOptions().position(this.location).title("Location of your bike!"));
+                if (this.lastActivity != Attribute.BIKING && activity == Attribute.BIKING && this.isHot) this.mMap.clear();
+            }
+
+            this.lastActivity = activity;
 
             // DEVELOPER DEBUG PURPOSE
             System.out.println("[SYSTEM] Activity detected: " + this.queue.tallyQueue());
@@ -397,16 +415,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
-    public void setColdMap(GoogleMap map) { if (map != null && coldStyle != null) map.setMapStyle(coldStyle); }
+    public void setColdMap(GoogleMap map) { if (map != null && coldStyle != null) this.isHot = false; map.setMapStyle(coldStyle); }
 
-    public void setWarmMap(GoogleMap map) { if (map != null && warmStyle != null) map.setMapStyle(warmStyle); }
+    public void setWarmMap(GoogleMap map) { if (map != null && warmStyle != null) this.isHot = false; map.setMapStyle(warmStyle); }
 
-    public void setHotMap(GoogleMap map) { if (map != null && hotStyle != null) map.setMapStyle(hotStyle); }
+    public void setHotMap(GoogleMap map) { if (map != null && hotStyle != null) this.isHot = true; map.setMapStyle(hotStyle); }
 
     /**
      * Method used to monitor whether one of the buttons was clicked.
@@ -537,4 +552,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return null;
     }
 
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+        System.out.println("Entered with " + location);
+        this.location = new LatLng(location.getLatitude(), location.getLongitude());
+        this.mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(this.location, ZOOM));
+    }
 }

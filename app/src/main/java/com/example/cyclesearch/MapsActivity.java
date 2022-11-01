@@ -441,6 +441,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.findBeacon:
                 getFind_beacon.setVisibility(View.VISIBLE);
                 buttons.setVisibility(View.INVISIBLE);
+                findViewById(R.id.selectedTurtle).setVisibility(View.INVISIBLE);
                 break;
             case R.id.exitButton:
                 if(buttons.getVisibility() == View.INVISIBLE) {

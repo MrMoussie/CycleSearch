@@ -74,26 +74,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private SensorManager sensorManager;
     private MySensor mySensor;
-//    private File file = new File( Environment.getExternalStorageDirectory().getPath() + "/Documents/test.csv");
-    private FileWriter outputfile;
-    private CSVWriter writer;
-    private SupportMapFragment mapFragment;
     private ListView listView;
     private ImageButton findBike;
     private ImageButton findBeacon;
     private ImageButton exitToMain;
-    private Button cookieButton;
     private View getFind_beacon;
     private View getFind_bike;
     private View buttons;
     private View map;
     private SensorEventListener sensorListener;
     private SensorActivity sensorActivity;
-    private Excel excel;
     private static final ArrayList<Beacon> currentBeacons = new ArrayList<>();
     private static Beacon selectedBeacon;
     private View find_beacon;
-    private View find_bike;
     private ArrayAdapter arrayAdapter;
     private AppCompatImageButton previousButton;
     private ArrayList macList = new ArrayList();
@@ -112,9 +105,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LatLng location;
     private static final int ZOOM = 15;
     private static String distance;
-
     private Attribute lastActivity;
-
     private boolean isHot = false;
 
     // FILES
@@ -256,21 +247,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
             mySensor = new MySensor();
-            sensorListener = new SensorActivity(mySensor, writer, this);
+            sensorListener = new SensorActivity(mySensor, this);
             sensorActivity = (SensorActivity) sensorListener;
             sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 200000);
             sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),200000);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * This function closes the input file streams
-     * @throws IOException
-     */
-    private void closeStream() throws IOException {
-        if (this.fileStream != null) this.fileStream.close();
     }
 
     /**
@@ -392,26 +375,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         findViewById(R.id.phrase4).setVisibility(View.INVISIBLE);
         findViewById(R.id.phrase5).setVisibility(View.INVISIBLE);
         findViewById(R.id.phrase6).setVisibility(View.INVISIBLE);
-    }
-
-    /**
-     * Method used to turn the Accelerometer and Gyrometer sensors ON
-     */
-    private void sensorON() {
-        sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 200000);
-        sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),200000);
-    }
-
-    /**
-     * Method used to turn the Accelerometer and Gyrometer sensors OFF
-     */
-    private void sensorOFF() {
-        sensorManager.unregisterListener(sensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
-        sensorManager.unregisterListener(sensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE));
-        if (sensorActivity != null) {
-            sensorActivity.resetAccCounter();
-            sensorActivity.resetGyroCounter();
-        }
     }
 
     /**

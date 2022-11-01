@@ -23,18 +23,9 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_splash);
-        //setContentView(binding.getRoot());
         new Handler().postDelayed(() -> {
-            // on below line we are
-            // creating a new intent
             Intent i = new Intent(SplashActivity.this, MapsActivity.class);
-
-            // on below line we are
-            // starting a new activity.
             startActivity(i);
-
-            // on the below line we are finishing
-            // our current activity.
             finish();
         }, 3000);
     }

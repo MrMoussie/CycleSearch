@@ -33,18 +33,6 @@ public class MySensor {
         gyroReady = true;
     }
 
-    public void setActivity(String activity) {
-        this.activity = activity;
-    }
-
-    public String getActivity() {
-        return this.activity;
-    }
-
-    public long getTimestamp() {
-        return timestamp;
-    }
-
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }

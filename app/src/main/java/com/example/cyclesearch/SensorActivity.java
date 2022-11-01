@@ -12,17 +12,11 @@ public class SensorActivity implements SensorEventListener {
     public MySensor sensor;
     public MySensor Mysensor;
 
-    int accCounter = 0;
-    int gyroCounter = 0;
-    int counterThreshold = 5;
-
-    private final Excel excel;
     private MapsActivity main;
 
-    public SensorActivity(MySensor sensor, CSVWriter writer, MapsActivity main) {
+    public SensorActivity(MySensor sensor, MapsActivity main) {
         this.sensor = sensor;
         Mysensor = sensor;
-        excel = new Excel(writer);
         this.main = main;
     }
     /**
@@ -60,22 +54,6 @@ public class SensorActivity implements SensorEventListener {
                 System.out.println("Invalid sensor type in class SensorActivity, method onSensorChanged");
                 break;
         }
-
-//        if (this.sensor.checkReady()) {
-//            excel.writeData(this.sensor.getAcc(), this.sensor.getGyro(), this.sensor.getTimestamp(), Mysensor.getActivity());
-//        }
-    }
-
-    public Excel getExcel() {
-        return this.excel;
-    }
-
-    public void resetGyroCounter() {
-        this.gyroCounter = 0;
-    }
-
-    public void resetAccCounter() {
-        this.accCounter = 0;
     }
 
     @Override

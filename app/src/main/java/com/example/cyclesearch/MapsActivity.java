@@ -20,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.PowerManager;
+import android.text.Layout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -27,6 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -82,6 +84,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private View getFind_bike;
     private View buttons;
     private View map;
+    private ImageButton previousSettings;
     private SensorEventListener sensorListener;
     private SensorActivity sensorActivity;
     private static final ArrayList<Beacon> currentBeacons = new ArrayList<>();
@@ -94,6 +97,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static MapStyleOptions warmStyle;
     private static MapStyleOptions hotStyle;
     private ImageButton reset;
+    private ImageButton settings;
     private Context mContext;
     private PowerManager powerManager;
     private Classifier cls;
@@ -102,6 +106,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Queue queue;
     private File addressFile = new File (Environment.getExternalStorageDirectory() + "/Download", "address.txt");
     private LocationManager locationManager;
+    private Switch ScreenSettings;
+    private Switch ChargerSettings;
+    private View settings_layout;
     private LatLng location;
     private static final int ZOOM = 15;
     private static String distance;
@@ -134,6 +141,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         exitToMain.setOnClickListener(this);
         reset = findViewById(R.id.resetButton);
         reset.setOnClickListener(this);
+        settings = findViewById(R.id.settings);
+        settings.setOnClickListener(this);
 
         mContext = getApplicationContext();
         powerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
@@ -150,6 +159,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         find_beacon = findViewById(R.id.includeFind_beacon);
         previousButton = find_beacon.findViewById(R.id.previousButton);
         previousButton.setOnClickListener(this);
+
+
+
+        settings_layout = findViewById(R.id.include_settings);
+        ScreenSettings = settings_layout.findViewById(R.id.ScreenSetting);
+        ChargerSettings = settings_layout.findViewById(R.id.ChargerSetting);
+        previousSettings = settings_layout.findViewById(R.id.previousButtonSettings);
+        ScreenSettings.setOnClickListener(this);
+        ChargerSettings.setOnClickListener(this);
+        previousSettings.setOnClickListener(this);
+
 
         listView = find_beacon.findViewById(R.id.listView);
         listView.setClickable(true);
@@ -452,6 +472,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     findViewById(R.id.resetButton).setVisibility(View.VISIBLE);
                 }
                 break;
+            case R.id.ScreenSetting:
+                if (!mySensor.getScreen()) {
+                    mySensor.setIsFaceBackward(true);
+                } else {
+                    mySensor.setIsFaceBackward(false);
+                }
+                break;
+            case R.id.ChargerSetting:
+                if (!mySensor.getCharger()) {
+                    mySensor.setIsChargerUp(true);
+                } else {
+                    mySensor.setIsChargerUp(false);
+                }
+                break;
+            case R.id.settings:
+                findViewById(R.id.include_settings).setVisibility(View.VISIBLE);
+                findViewById(R.id.differentButtons).setVisibility(View.GONE);
+                break;
+            case R.id.previousButtonSettings:
+                findViewById(R.id.include_settings).setVisibility(View.GONE);
+                findViewById(R.id.differentButtons).setVisibility(View.VISIBLE);
+                break;
             default:
                 System.out.println("Entered default");
                 break;
@@ -463,7 +505,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      * @return Attribute with the activity of the user
      */
     private Attribute getActivityRightPocket() {
-        if (!this.mySensor.isReady()) return null;
+        if (!this.mySensor.checkReady()) return null;
 
         // Attributes for the prediction model
         // Right pocket

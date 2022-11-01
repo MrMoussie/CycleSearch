@@ -14,7 +14,7 @@
         <entry key="app/src/main/res/layout/content_main.xml" value="0.165" />
         <entry key="app/src/main/res/layout/content_main2.xml" value="0.15070921985815602" />
         <entry key="app/src/main/res/layout/content_splash.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/find_beacon.xml" value="0.3260894775390625" />
+        <entry key="app/src/main/res/layout/find_beacon.xml" value="0.1" />
         <entry key="app/src/main/res/layout/find_bike.xml" value="0.3900052007800805" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_first2.xml" value="0.15070921985815602" />
@@ -23,8 +23,9 @@
         <entry key="app/src/main/res/layout/fragment_second2.xml" value="0.2771145543308123" />
         <entry key="app/src/main/res/layout/fragment_weka.xml" value="0.1" />
         <entry key="app/src/main/res/layout/login_screen.xml" value="0.30885416666666665" />
-        <entry key="app/src/main/res/layout/main_screen.xml" value="0.18759918212890625" />
+        <entry key="app/src/main/res/layout/main_screen.xml" value="0.335" />
         <entry key="app/src/main/res/layout/register_screen.xml" value="0.30885416666666665" />
+        <entry key="app/src/main/res/layout/settings_layout.xml" value="0.375" />
         <entry key="app/src/main/res/layout/splash.xml" value="0.188690185546875" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.184375" />
       </map>

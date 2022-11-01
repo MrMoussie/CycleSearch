@@ -111,6 +111,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocationManager locationManager;
     private LatLng location;
     private static final int ZOOM = 15;
+    private static String distance;
 
     private Attribute lastActivity;
 
@@ -363,6 +364,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     }
                                 }
                             }
+
+                            distance = String.valueOf(Math.round(beacon.getDistance() * 100.0) / 100.0) + 'm';
+                            ((TextView) findViewById(R.id.distance)).setText(distance);
                             prevRSSI = RSSI;
                         }
                     }

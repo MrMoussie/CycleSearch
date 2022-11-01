@@ -165,7 +165,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         listView.setOnItemClickListener((parent, view, position, id) -> {
             findViewById(R.id.selectedTurtle).setVisibility(View.VISIBLE);
             findViewById(R.id.selectedTurtle).setX(parent.getX() - 110);
-            findViewById(R.id.selectedTurtle).setY(parent.getY() + 20);
+            findViewById(R.id.selectedTurtle).setY(parent.getY() + view.getY());
+
+            System.out.println(parent.getY());
+            System.out.println(view.getY());
+
             // Set selected beacon
             selectedBeaconAddress = parent.getItemAtPosition(position).toString().split(": ")[1].split(" ")[0];
             selectedBeacon = currentBeacons.stream().filter(x -> x.getBluetoothAddress().equals(selectedBeaconAddress)).collect(Collectors.toList()).get(0);
@@ -457,6 +461,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (findViewById(R.id.findBeacon).getVisibility() == View.INVISIBLE) {
                     findViewById(R.id.findBeacon).setVisibility(View.VISIBLE);
                     selectedBeacon = null;
+                    selectedBeaconAddress = null;
                     if (addressFile.exists()) {
                         addressFile.delete();
                     }

@@ -141,7 +141,7 @@
             android:layout_marginTop="549dp"
             android:layout_marginEnd="4dp"
             android:layout_marginBottom="119dp"
-            android:src="@drawable/img_1"
+            android:src="@drawable/calibration_phrase"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

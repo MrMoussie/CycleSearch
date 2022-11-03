@@ -297,7 +297,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             this.arrayAdapter.notifyDataSetChanged();
 
             if (this.location != null) {
-                if (this.lastActivity == Attribute.BIKING && activity != Attribute.BIKING) this.mMap.addMarker(new MarkerOptions().position(this.location).title("Location of your bike!"));
+                if (this.lastActivity == Attribute.BIKING && activity != Attribute.BIKING) {
+                    this.mMap.clear();
+                    this.mMap.addMarker(new MarkerOptions().position(this.location).title("Location of your bike!"));
+                }
                 if (this.lastActivity != Attribute.BIKING && activity == Attribute.BIKING && this.isHot) this.mMap.clear();
             }
 

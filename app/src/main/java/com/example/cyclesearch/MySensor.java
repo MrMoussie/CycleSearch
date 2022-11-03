@@ -13,11 +13,11 @@ public class MySensor {
     private boolean accReady = false;
     private boolean gyroReady = false;
     private String activity = "Init";
-    private boolean isFaceBackward = false;
+    private boolean isFaceForward = false;
     private boolean isChargerUp = false;
 
     public void setIsFaceBackward(boolean input){
-        isFaceBackward = input;
+        isFaceForward = input;
     }
 
     public void setIsChargerUp(boolean input){
@@ -26,7 +26,7 @@ public class MySensor {
 
     public ArrayList<Float> getAcc() {
         ArrayList<Float> returnAcc = new ArrayList<>(Acc);
-        if(isFaceBackward){
+        if(isFaceForward){
             returnAcc.set(0, returnAcc.get(0)*-1);
             returnAcc.set(2, returnAcc.get(2)*-1);
         }
@@ -45,7 +45,7 @@ public class MySensor {
 
     public ArrayList<Float> getGyro() {
         ArrayList<Float> returnGyro = new ArrayList<>(Gyro);
-        if(isFaceBackward){
+        if(isFaceForward){
             returnGyro.set(0, returnGyro.get(0)*-1);
             returnGyro.set(2, returnGyro.get(2)*-1);
         }
@@ -74,7 +74,7 @@ public class MySensor {
     }
 
     public boolean getScreen() {
-        return isFaceBackward;
+        return isFaceForward;
     }
 
     public boolean getCharger() {

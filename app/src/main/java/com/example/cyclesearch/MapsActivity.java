@@ -346,17 +346,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                                 clearTurtleText();
 
-                                if (RSSI < -85) {
+                                if (RSSI < -78.0) {
                                     setColdMap(mMap);
-                                    if (RSSI < -95) {
+                                    if (RSSI < -82.0) {
                                         findViewById(R.id.phrase1).setVisibility(View.VISIBLE);
                                     } else {
                                         findViewById(R.id.phrase2).setVisibility(View.VISIBLE);
                                     }
-                                } else if (RSSI < -60) {
+                                } else if (RSSI < -59.0) {
                                     setWarmMap(mMap);
 
-                                    if (RSSI < -75) {
+                                    if (RSSI < -65.6) {
                                         findViewById(R.id.phrase3).setVisibility(View.VISIBLE);
                                     } else {
                                         findViewById(R.id.phrase4).setVisibility(View.VISIBLE);
@@ -364,7 +364,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 }  else {
                                     setHotMap(mMap);
 
-                                    if (RSSI < -50) {
+                                    if (RSSI < -56) {
                                         findViewById(R.id.phrase5).setVisibility(View.VISIBLE);
                                     } else {
                                         findViewById(R.id.phrase6).setVisibility(View.VISIBLE);

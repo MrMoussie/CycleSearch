@@ -5,10 +5,15 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.core.app.NotificationCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
@@ -160,8 +165,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         previousButton = find_beacon.findViewById(R.id.previousButton);
         previousButton.setOnClickListener(this);
 
-
-
         settings_layout = findViewById(R.id.include_settings);
         ScreenSettings = settings_layout.findViewById(R.id.ScreenSetting);
         ChargerSettings = settings_layout.findViewById(R.id.ChargerSetting);
@@ -170,16 +173,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         ChargerSettings.setOnClickListener(this);
         previousSettings.setOnClickListener(this);
 
-
         listView = find_beacon.findViewById(R.id.listView);
         listView.setClickable(true);
         listView.setOnItemClickListener((parent, view, position, id) -> {
             findViewById(R.id.selectedTurtle).setVisibility(View.VISIBLE);
             findViewById(R.id.selectedTurtle).setX(parent.getX() - 110);
             findViewById(R.id.selectedTurtle).setY(parent.getY() + view.getY());
-
-            System.out.println(parent.getY());
-            System.out.println(view.getY());
 
             // Set selected beacon
             selectedBeaconAddress = parent.getItemAtPosition(position).toString().split(": ")[1].split(" ")[0];
@@ -299,6 +298,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (this.location != null) {
                 if (this.lastActivity == Attribute.BIKING && activity != Attribute.BIKING) {
                     this.mMap.clear();
+                    showNotification("Bike parked!", "The location of your bike has been marked on the map!");
                     this.mMap.addMarker(new MarkerOptions().position(this.location).title("Location of your bike!"));
                 }
                 if (this.lastActivity != Attribute.BIKING && activity == Attribute.BIKING && this.isHot) this.mMap.clear();
@@ -419,6 +419,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void setWarmMap(GoogleMap map) { if (map != null && warmStyle != null) this.isHot = false; map.setMapStyle(warmStyle); }
 
     public void setHotMap(GoogleMap map) { if (map != null && hotStyle != null) this.isHot = true; map.setMapStyle(hotStyle); }
+
+    void showNotification(String title, String message) {
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("YOUR_CHANNEL_ID",
+                    "YOUR_CHANNEL_NAME",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription("YOUR_NOTIFICATION_CHANNEL_DESCRIPTION");
+            mNotificationManager.createNotificationChannel(channel);
+        }
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), "YOUR_CHANNEL_ID")
+                .setSmallIcon(R.mipmap.ic_launcher) // notification icon
+                .setContentTitle(title) // title for notification
+                .setContentText(message)// message for notification
+                .setAutoCancel(true); // clear notification after click
+        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(pi);
+        mNotificationManager.notify(0, mBuilder.build());
+    }
 
     /**
      * Method used to monitor whether one of the buttons was clicked.

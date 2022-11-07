@@ -12,6 +12,7 @@ import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -78,7 +79,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private double prevRSSI = Double.NEGATIVE_INFINITY;
     private double threshold = 5;
     private BeaconManager beaconManager;
-    private GoogleMap mMap;
+    private static GoogleMap mMap;
     private SensorManager sensorManager;
     private MySensor mySensor;
     private ListView listView;
@@ -114,11 +115,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Switch ScreenSettings;
     private Switch ChargerSettings;
     private View settings_layout;
-    private LatLng location;
-    private static final int ZOOM = 15;
+    private static LatLng location;
+    private static final int ZOOM = 17;
     private static String distance;
     private Attribute lastActivity;
     private boolean isHot = false;
+    static NotificationManager mNotificationManager;
+
+    public static class ConfirmReceiver extends BroadcastReceiver {
+
+        public String ACTION_CONFIRM = "ACTION_CONFIRM";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(ACTION_CONFIRM)) {
+                mNotificationManager.cancelAll();
+                mMap.addMarker(new MarkerOptions().position(location).title("Location of your bike!"));
+            }
+        }
+    }
 
     // FILES
     private final static String FILE_J48 = "treesJ48.model";
@@ -228,6 +243,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             System.out.println("[SYSTEM] PERMISSION GRANTED!");
                             init();
                             bluetoothSetup();
+                            showNotification("App started", "!!!!");
                         }
                     }
 
@@ -265,6 +281,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
 
+            mNotificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
             mySensor = new MySensor();
             sensorListener = new SensorActivity(mySensor, this);
             sensorActivity = (SensorActivity) sensorListener;
@@ -298,8 +317,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (this.location != null) {
                 if (this.lastActivity == Attribute.BIKING && activity != Attribute.BIKING) {
                     this.mMap.clear();
-                    showNotification("Bike parked!", "The location of your bike has been marked on the map!");
-                    this.mMap.addMarker(new MarkerOptions().position(this.location).title("Location of your bike!"));
+                    showNotification("Confirm Bike parked!", "Confirm that your bike has been parked!");
                 }
                 if (this.lastActivity != Attribute.BIKING && activity == Attribute.BIKING && this.isHot) this.mMap.clear();
             }
@@ -421,8 +439,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void setHotMap(GoogleMap map) { if (map != null && hotStyle != null) this.isHot = true; map.setMapStyle(hotStyle); }
 
     void showNotification(String title, String message) {
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Intent snoozeIntent = new Intent(this, ConfirmReceiver.class);
+        snoozeIntent.setAction("ACTION_CONFIRM");
+        PendingIntent snoozePendingIntent =
+                PendingIntent.getBroadcast(this, 0, snoozeIntent, 0);
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("YOUR_CHANNEL_ID",
                     "YOUR_CHANNEL_NAME",
@@ -434,6 +456,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setSmallIcon(R.mipmap.ic_launcher) // notification icon
                 .setContentTitle(title) // title for notification
                 .setContentText(message)// message for notification
+                .addAction(R.drawable.turtle, "confirm",
+                        snoozePendingIntent)
                 .setAutoCancel(true); // clear notification after click
         Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
         PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);

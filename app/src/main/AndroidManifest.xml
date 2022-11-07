@@ -42,6 +42,15 @@
             </intent-filter>
         </activity>
 
+        <receiver
+            android:name=".MapsActivity$ConfirmReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.example.cyclesearch.MapsActivity.ConfirmReceiver.ACTION_CONFIRM" />
+            </intent-filter>
+        </receiver>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />

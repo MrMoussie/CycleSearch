@@ -243,7 +243,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             System.out.println("[SYSTEM] PERMISSION GRANTED!");
                             init();
                             bluetoothSetup();
-                            showNotification("App started", "!!!!");
                         }
                     }
 
